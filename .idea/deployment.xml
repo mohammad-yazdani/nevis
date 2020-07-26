@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="ubuntu@15.222.210.148:22 key">
+    <serverData>
+      <paths name="ubuntu@15.222.210.148:22 key">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/ubuntu/deploy/speech" local="$PROJECT_DIR$" web="/" />
+            <mapping local="" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>
