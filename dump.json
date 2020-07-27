@@ -1,0 +1,121 @@
+{
+    "duration": 4.063333,
+    "length": 15,
+    "sentences": [
+        {
+            "words": [
+                {
+                    "value": "This",
+                    "timestamp": 0.15049381481481483,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "debate",
+                    "timestamp": 0.5116789703703704,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "is",
+                    "timestamp": 0.9631604148148148,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "really",
+                    "timestamp": 1.0835554666666667,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "about",
+                    "timestamp": 1.3243455703703704,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "right",
+                    "timestamp": 1.745728251851852,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "by",
+                    "timestamp": 2.1671109333333334,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "divine.",
+                    "timestamp": 2.377802274074074,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "Right",
+                    "timestamp": 2.8292837185185187,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "of",
+                    "timestamp": 3.070073822222222,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "your",
+                    "timestamp": 3.1603701111111113,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "most",
+                    "timestamp": 3.2807651629629633,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "time",
+                    "timestamp": 3.491456503703704,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "you're",
+                    "timestamp": 3.7021478444444447,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "gay.",
+                    "timestamp": 3.8225428962962966,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        }
+    ]
+}

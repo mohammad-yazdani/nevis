@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import argparse
+import json
 import logging
 import ssl
 import sys
@@ -62,7 +63,7 @@ def prep_and_transcribe(input_filename):
         if idx < (len(aligned_sentences) - 1):
             aligned_sentences[idx].length = aligned_sentences[idx + 1].words[0].timestamp
     aligned_sentences[(len(aligned_sentences) - 1)].length = duration
-    return duration, len(alignment), aligned_sentences
+    return {"duration": duration, "length": len(alignment), "sentences": aligned_sentences}
 
 
 @app.route('/')
@@ -92,7 +93,8 @@ def transcribe_file():
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         out = prep_and_transcribe(sys.argv[1])
-        print(out)
+        dump = open("dump.json", "w")
+        json.dump(out, dump)
     else:
         logging.getLogger().setLevel(logging.DEBUG)
         context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)

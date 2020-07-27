@@ -5,9 +5,10 @@ PARAMS_PATH = "/mnt/libspeech/model/deep_punct/deeppunct_params_en"
 CHECKPOINT_PATH = "/mnt/libspeech/model/deep_punct/deeppunct_checkpoint_wikipedia"
 
 
-class Sentence:
+class Sentence(dict):
 
     def __init__(self, words, length):
+        super().__init__(words=words, length=length)
         self.words = words
         self.length = length
 
