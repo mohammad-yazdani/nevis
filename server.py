@@ -26,10 +26,14 @@ def getargs():
     return args.cert, args.key
 
 
-def prep_and_transcribe(input_filename):
+def prep_and_transcribe(input_filename, model_dir=None, debug=False):
     mono_wav, duration = prepare_input(input_filename)
     app.logger.debug("Converted to WAV mono.")
-    decode_out = decode(mono_wav)
+    decode_out = decode(mono_wav, model_dir)
+    
+    if debug:
+        print(decode_out["transcript"])
+
     sentences = Sentence.segment(decode_out["transcript"])
 
     symbols = decode_out["alignment"][0]
@@ -93,9 +97,11 @@ def transcribe_file():
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
-        out = prep_and_transcribe(sys.argv[1])
+        if len(sys.argv) > 2:
+            model = sys.argv[2]
+        out = prep_and_transcribe(sys.argv[1], model, debug=True)
         dump = open("dump.json", "w")
-        json.dump(out, dump)
+        json.dump(out, dump, indent=4)
     else:
         logging.getLogger().setLevel(logging.DEBUG)
         context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)

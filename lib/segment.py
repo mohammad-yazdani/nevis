@@ -19,9 +19,8 @@ class Sentence(dict):
         
         # TODO : Dummy punctuation
         first_word = puncted_words[0]
-        first_word_len = len(first_word)
         first_char = (first_word[0]).upper()
-        rest_word = first_word[-(first_word_len - 1)]
+        rest_word = first_word[1:]
         puncted_words[0] = first_char + rest_word
         puncted_words[-1] += "."
 

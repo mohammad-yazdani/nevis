@@ -6,9 +6,11 @@ from tools.file_io import delete_if_exists
 MODELDIR = '/mnt/libspeech/model/kaldi-generic-en-tdnn_fl-r20190609'
 
 
-def decode(WAVFILE):
+def decode(WAVFILE, model):
+    if model is None:
+        model = MODELDIR
     try:
-        kaldi_model = KaldiNNet3OnlineModel(MODELDIR)
+        kaldi_model = KaldiNNet3OnlineModel(model)
         decoder = KaldiNNet3OnlineDecoder(kaldi_model)
 
         if decoder.decode_wav_file(WAVFILE):
