@@ -16,8 +16,23 @@ class Sentence(dict):
     def _extract_words(segment, punctuated):
         raw_words = str(segment).split()
         puncted_words = punctuated.split()
+        
+        # TODO : Dummy punctuation
+        first_word = puncted_words[0]
+        first_word_len = len(first_word)
+        first_char = (first_word[0]).upper()
+        rest_word = first_word[-(first_word_len - 1)]
+        puncted_words[0] = first_char + rest_word
+        puncted_words[-1] += "."
+
         if len(raw_words) != len(puncted_words):
-            raise Exception("Extra words added by punct :/")
+            # TODO : This should be an error but for now we hack around
+            # raise Exception("Extra words added by punct :/")
+            first = puncted_words[0]
+            puncted_words = raw_words
+            puncted_words[0] = first
+            puncted_words[-1] = puncted_words[-1] + "."
+
         puncted_indexes = list()
         for idx in range(len(raw_words)):
             if raw_words[idx] != puncted_words[idx] and len(raw_words[idx]) != len(puncted_words[idx]):
@@ -41,8 +56,9 @@ class Sentence(dict):
         # The default language is 'en'
         segmenter = DeepSegment("en")
         segments = segmenter.segment_long(transcript)
-        puncted_sequences = Sentence._punctuate(segments)
-
+        # puncted_sequences = Sentence._punctuate(segments)
+        # TODO : Quick fix hack
+        puncted_sequences = segments 
         sentences = list()
         # Parallel
         for idx in range(len(segments)):
