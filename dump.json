@@ -1,0 +1,2609 @@
+{
+    "duration": 152.64,
+    "length": 387,
+    "sentences": [
+        {
+            "words": [
+                {
+                    "value": "Let's",
+                    "timestamp": 1.1702299980342048,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "have",
+                    "timestamp": 1.4102771771181442,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "a",
+                    "timestamp": 1.5603066640456063,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "closer",
+                    "timestamp": 1.6203184588165913,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "look.",
+                    "timestamp": 1.9803892274425003,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "At",
+                    "timestamp": 2.3404599960684096,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "what",
+                    "timestamp": 2.4604835856103793,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 2.6105130725378416,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "definition",
+                    "timestamp": 2.7005307646943186,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "of",
+                    "timestamp": 3.3306546097896597,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "differential",
+                    "timestamp": 3.4506781993316293,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "village",
+                    "timestamp": 3.9307725574995085,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "he",
+                    "timestamp": 4.2008256339689405,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "is",
+                    "timestamp": 4.32084922351091,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "telling",
+                    "timestamp": 4.470878710438372,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "us",
+                    "timestamp": 4.800943581678789,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "we",
+                    "timestamp": 5.911161784942009,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "will",
+                    "timestamp": 5.9711735797129935,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "look",
+                    "timestamp": 6.091197169254963,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "at",
+                    "timestamp": 6.30123845095341,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "an",
+                    "timestamp": 6.391256143109888,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "example",
+                    "timestamp": 6.511279732651857,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "of",
+                    "timestamp": 6.991374090819736,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "a",
+                    "timestamp": 7.141403577747198,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "function",
+                    "timestamp": 7.201415372518183,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "which",
+                    "timestamp": 7.561486141144092,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "is",
+                    "timestamp": 7.831539217613524,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "differential",
+                    "timestamp": 8.011574601926478,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "and",
+                    "timestamp": 9.271822292117161,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "not",
+                    "timestamp": 9.421851779044623,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "an",
+                    "timestamp": 9.571881265972085,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "example",
+                    "timestamp": 9.661898958128562,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "of",
+                    "timestamp": 10.081981521525456,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "a",
+                    "timestamp": 10.202005111067425,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "function",
+                    "timestamp": 10.262016905838411,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "which",
+                    "timestamp": 10.652093571849813,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "is",
+                    "timestamp": 10.832128956162768,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "not",
+                    "timestamp": 10.952152545704736,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "differential",
+                    "timestamp": 11.222205622174169,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "consider",
+                    "timestamp": 14.882925103204245,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "ethics",
+                    "timestamp": 15.483043050914095,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "lie",
+                    "timestamp": 16.023149203852956,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "equals",
+                    "timestamp": 16.383219972478866,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "x",
+                    "timestamp": 16.863314330646745,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "y",
+                    "timestamp": 17.103361509730686,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "which",
+                    "timestamp": 17.67347356005504,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "is",
+                    "timestamp": 17.973532533909964,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "a",
+                    "timestamp": 18.12356202083743,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "differential",
+                    "timestamp": 18.183573815608412,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "function",
+                    "timestamp": 18.78369176331826,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "but",
+                    "timestamp": 20.343998427363868,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "a",
+                    "timestamp": 20.554039709062316,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "phoenician.",
+                    "timestamp": 20.6140515038333,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "I've",
+                    "timestamp": 21.60424611755455,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "being",
+                    "timestamp": 21.814287399252997,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "differential",
+                    "timestamp": 22.054334578336935,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "at",
+                    "timestamp": 22.71446432081777,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "a",
+                    "timestamp": 22.894499705130723,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "bee",
+                    "timestamp": 23.10454098682917,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "means",
+                    "timestamp": 23.914700216237467,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "that",
+                    "timestamp": 24.274770984863377,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 24.394794574405346,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "limit",
+                    "timestamp": 24.48481226656182,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "of",
+                    "timestamp": 24.84488303518773,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 24.994912522115193,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "ratio",
+                    "timestamp": 25.05492431688618,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "between",
+                    "timestamp": 25.625036367210534,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 25.92509534106546,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "error",
+                    "timestamp": 26.04511893060743,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "in",
+                    "timestamp": 26.40518969923334,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 26.495207391389815,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "linear",
+                    "timestamp": 26.58522508354629,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "approximation",
+                    "timestamp": 26.915289954786708,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "and",
+                    "timestamp": 27.845472773736976,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 27.965496363278945,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "displacement",
+                    "timestamp": 28.05551405543542,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "goes",
+                    "timestamp": 29.225744053469626,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "to",
+                    "timestamp": 29.49579712993906,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero",
+                    "timestamp": 29.61582071948103,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "as",
+                    "timestamp": 30.00589738549243,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "we",
+                    "timestamp": 30.155926872419894,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "approach",
+                    "timestamp": 30.275950461961862,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 30.666027127973262,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "point",
+                    "timestamp": 30.786050717515234,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "eighty.",
+                    "timestamp": 31.11611558875565,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "Let's",
+                    "timestamp": 33.066498918812655,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "see",
+                    "timestamp": 33.3065460978966,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "how",
+                    "timestamp": 33.48658148220955,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 33.606605071751524,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "linear",
+                    "timestamp": 33.75663455867898,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "approximation",
+                    "timestamp": 33.99668173776292,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "behaves",
+                    "timestamp": 34.71682327501474,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "at",
+                    "timestamp": 35.226923530568115,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero",
+                    "timestamp": 35.37695301749557,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero.",
+                    "timestamp": 35.6770119913505,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "First",
+                    "timestamp": 37.14730096323963,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "we",
+                    "timestamp": 37.95746019264792,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "calculate",
+                    "timestamp": 38.077483782189894,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 38.52757224297228,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "linear",
+                    "timestamp": 38.58758403774326,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "proclamation",
+                    "timestamp": 38.85763711421269,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "of",
+                    "timestamp": 39.66779634362099,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "epidemics.",
+                    "timestamp": 39.87783762531944,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "Why",
+                    "timestamp": 40.35793198348732,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "at",
+                    "timestamp": 40.65799095734224,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "serious",
+                    "timestamp": 40.8080204442697,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "here.",
+                    "timestamp": 41.198097110281104,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "The",
+                    "timestamp": 43.178486337723605,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "linear",
+                    "timestamp": 43.32851582465107,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "proclamation",
+                    "timestamp": 43.628574798505994,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "of",
+                    "timestamp": 44.348716335757814,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "athens",
+                    "timestamp": 44.49874582268527,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "x",
+                    "timestamp": 44.798804796540196,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "y",
+                    "timestamp": 45.00884607823865,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "at",
+                    "timestamp": 45.338910949479065,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero",
+                    "timestamp": 45.518946333792016,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero",
+                    "timestamp": 45.84901120503243,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "is",
+                    "timestamp": 46.62916453705524,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 46.7791940239827,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "plain",
+                    "timestamp": 46.869211716139176,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "inside",
+                    "timestamp": 47.28929427953607,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "equals",
+                    "timestamp": 47.649365048161975,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero.",
+                    "timestamp": 47.91941812463141,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "Now",
+                    "timestamp": 49.59974837821898,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "let's",
+                    "timestamp": 50.3198899154708,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "start",
+                    "timestamp": 50.529931197169255,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "getting",
+                    "timestamp": 50.76997837625319,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "closer",
+                    "timestamp": 51.01002555533713,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "to",
+                    "timestamp": 51.34009042657755,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 51.49011991350501,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "point.",
+                    "timestamp": 51.580137605661484,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "Zero",
+                    "timestamp": 51.9102024769019,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero",
+                    "timestamp": 52.210261450756825,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "notice",
+                    "timestamp": 54.88078631806565,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "how.",
+                    "timestamp": 55.270862984077056,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "The",
+                    "timestamp": 55.39088657361903,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "linear",
+                    "timestamp": 55.51091016316099,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "approximation",
+                    "timestamp": 55.81096913701592,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "gets",
+                    "timestamp": 56.56111657165323,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "better",
+                    "timestamp": 56.80116375073717,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "at",
+                    "timestamp": 57.0712168272066,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "approximating",
+                    "timestamp": 57.19124041674857,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 57.8813760566149,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "function",
+                    "timestamp": 57.971393748771376,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "as",
+                    "timestamp": 58.51149990171024,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "we",
+                    "timestamp": 58.72154118340868,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "approach",
+                    "timestamp": 58.841564772950655,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "syria's",
+                    "timestamp": 59.23164143896206,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "euro.",
+                    "timestamp": 59.62171810497346,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "This",
+                    "timestamp": 60.79194810300766,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "is",
+                    "timestamp": 60.971983487320614,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "because",
+                    "timestamp": 61.092007076862586,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 61.48208374287399,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "error",
+                    "timestamp": 61.63211322980145,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "in",
+                    "timestamp": 61.962178101041864,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 62.08220169058384,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "linear",
+                    "timestamp": 62.14221348535482,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "approximation.",
+                    "timestamp": 62.47227835659524,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "Get",
+                    "timestamp": 63.34244938077452,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "smaller",
+                    "timestamp": 63.55249066247297,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "as",
+                    "timestamp": 64.00257912325536,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "we",
+                    "timestamp": 64.1826145075683,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "approach",
+                    "timestamp": 64.30263809711028,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "in",
+                    "timestamp": 66.25302142716728,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "other",
+                    "timestamp": 66.43305681148024,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "words",
+                    "timestamp": 66.6430980931787,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 67.39324552781599,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "closer",
+                    "timestamp": 67.54327501474346,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "we",
+                    "timestamp": 67.90334578336937,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "get",
+                    "timestamp": 68.02336937291133,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "to",
+                    "timestamp": 68.23341065460978,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero",
+                    "timestamp": 68.32342834676626,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero",
+                    "timestamp": 68.5934814232357,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 69.16359347356006,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "better.",
+                    "timestamp": 69.28361706310201,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "The",
+                    "timestamp": 69.58367603695694,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "linear",
+                    "timestamp": 69.70369962649892,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "approximation",
+                    "timestamp": 70.03376449773933,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "approximates",
+                    "timestamp": 70.78391193237664,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "to",
+                    "timestamp": 71.41403577747198,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "function",
+                    "timestamp": 71.50405346962846,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "differential.",
+                    "timestamp": 73.36441910752899,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "Functions",
+                    "timestamp": 73.96453705523884,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "are",
+                    "timestamp": 74.4746373107922,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "exactly",
+                    "timestamp": 74.65467269510516,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "those",
+                    "timestamp": 75.16477295065853,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "functions",
+                    "timestamp": 75.37481423235698,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "for",
+                    "timestamp": 75.94492628268134,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "which",
+                    "timestamp": 76.0949557696088,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "this",
+                    "timestamp": 76.30499705130725,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "property",
+                    "timestamp": 76.4550265382347,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "holds.",
+                    "timestamp": 76.84510320424612,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "Now",
+                    "timestamp": 79.30558678985649,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "let's",
+                    "timestamp": 79.93571063495183,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "see",
+                    "timestamp": 80.17575781403578,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "what",
+                    "timestamp": 80.29578140357775,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "happens.",
+                    "timestamp": 80.4458108905052,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "If",
+                    "timestamp": 80.80588165913112,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 80.92590524867309,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "function",
+                    "timestamp": 81.01592294082955,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "which",
+                    "timestamp": 81.43600550422646,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "is",
+                    "timestamp": 81.6160408885394,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "not",
+                    "timestamp": 81.73606447808137,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "differential",
+                    "timestamp": 82.0361234519363,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "at",
+                    "timestamp": 82.78627088657362,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero",
+                    "timestamp": 82.96630627088656,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero",
+                    "timestamp": 83.236359347356,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "consider",
+                    "timestamp": 84.52661293493217,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "epidemics.",
+                    "timestamp": 85.18674267741301,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "Why",
+                    "timestamp": 85.72684883035187,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "equals",
+                    "timestamp": 86.08691959897779,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 86.50700216237468,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "square",
+                    "timestamp": 86.62702575191665,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "root",
+                    "timestamp": 86.98709652054255,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "of",
+                    "timestamp": 87.64722626302338,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 87.82726164733634,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "absolute",
+                    "timestamp": 87.91727933949282,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "value",
+                    "timestamp": 88.3973736976607,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "of",
+                    "timestamp": 88.75744446628661,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "x",
+                    "timestamp": 89.02749754275604,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "y.",
+                    "timestamp": 89.23753882445449,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "This",
+                    "timestamp": 90.61781010418714,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "function",
+                    "timestamp": 90.82785138588558,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "is",
+                    "timestamp": 91.1879221545115,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "not",
+                    "timestamp": 91.33795164143896,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "defensible",
+                    "timestamp": 91.60800471790839,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "at",
+                    "timestamp": 92.23812856300373,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero",
+                    "timestamp": 92.41816394731669,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero.",
+                    "timestamp": 92.68821702378611,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "You",
+                    "timestamp": 94.06848830351876,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "will",
+                    "timestamp": 94.18851189306073,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "see",
+                    "timestamp": 94.30853548260271,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "why",
+                    "timestamp": 94.48857086691567,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "this",
+                    "timestamp": 94.66860625122861,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "is",
+                    "timestamp": 94.87864753292706,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 94.96866522508354,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "case",
+                    "timestamp": 95.08868881462551,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "later",
+                    "timestamp": 95.38874778848043,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "in",
+                    "timestamp": 95.68880676233536,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "this",
+                    "timestamp": 95.80883035187733,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "lesson",
+                    "timestamp": 95.95885983880478,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "for",
+                    "timestamp": 96.94905445252604,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "now.",
+                    "timestamp": 97.129089836839,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "Let's",
+                    "timestamp": 97.81922547670533,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "see",
+                    "timestamp": 98.08927855317475,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "what",
+                    "timestamp": 98.23930804010222,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "this",
+                    "timestamp": 98.38933752702968,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "means",
+                    "timestamp": 98.56937291134263,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "geometrically",
+                    "timestamp": 98.80942009042657,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "it",
+                    "timestamp": 100.6697857283271,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "means",
+                    "timestamp": 100.84982111264006,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "that",
+                    "timestamp": 101.089868291724,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 101.20989188126596,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "limit",
+                    "timestamp": 101.32991547080793,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "of",
+                    "timestamp": 101.62997444466286,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 101.74999803420484,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "ratio",
+                    "timestamp": 101.8400157263613,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "between",
+                    "timestamp": 102.23009239237271,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 102.56015726361312,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "error",
+                    "timestamp": 102.71018675054059,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "in",
+                    "timestamp": 103.04025162178101,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 103.16027521132297,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "linear",
+                    "timestamp": 103.25029290347945,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "approximation",
+                    "timestamp": 103.55035187733438,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "and",
+                    "timestamp": 104.69057597798309,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 104.84060546491055,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "displacement",
+                    "timestamp": 104.90061725968154,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "is",
+                    "timestamp": 105.71077648908982,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "not",
+                    "timestamp": 105.86080597601729,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "eukolos",
+                    "timestamp": 106.19087084725771,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero",
+                    "timestamp": 106.52093571849812,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "as",
+                    "timestamp": 106.85100058973855,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "we",
+                    "timestamp": 107.001030076666,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "approach",
+                    "timestamp": 107.15105956359346,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 107.54113622960487,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "point",
+                    "timestamp": 107.63115392176134,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero",
+                    "timestamp": 107.96121879300176,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero",
+                    "timestamp": 108.2312718694712,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "but",
+                    "timestamp": 109.88159622567328,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "see",
+                    "timestamp": 110.06163160998624,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "huddling.",
+                    "timestamp": 110.27167289168467,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "Approximation",
+                    "timestamp": 110.72176135246707,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "behaves",
+                    "timestamp": 111.4118969923334,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "as",
+                    "timestamp": 111.80197365834479,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "yours.",
+                    "timestamp": 111.95200314527226,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "Here",
+                    "timestamp": 112.25206211912717,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "first",
+                    "timestamp": 113.93239237271476,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "we",
+                    "timestamp": 114.77255749950855,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "calculate",
+                    "timestamp": 114.89258108905051,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 115.3726754472184,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "linear",
+                    "timestamp": 115.43268724198937,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "proclamation",
+                    "timestamp": 115.7327462158443,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "of",
+                    "timestamp": 116.42288185571063,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "upper.",
+                    "timestamp": 116.51289954786711,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "That's",
+                    "timestamp": 116.69293493218007,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "why",
+                    "timestamp": 116.96298800864949,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "i'd",
+                    "timestamp": 117.20303518773343,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "sierra",
+                    "timestamp": 117.38307057204638,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero",
+                    "timestamp": 117.68312954590131,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "again",
+                    "timestamp": 119.66351877334381,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "dillinger.",
+                    "timestamp": 120.44367210536662,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "Proclamation",
+                    "timestamp": 120.893760566149,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "about",
+                    "timestamp": 121.55389030862983,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 121.76393159032828,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "vexed",
+                    "timestamp": 121.85394928248476,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "wi",
+                    "timestamp": 122.12400235895419,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "at",
+                    "timestamp": 122.36404953803813,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "sera",
+                    "timestamp": 122.54408492235109,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero",
+                    "timestamp": 122.8741497935915,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "is",
+                    "timestamp": 123.59429133084332,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 123.77432671515628,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "planes",
+                    "timestamp": 123.86434440731276,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "that",
+                    "timestamp": 124.28442697070965,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "equals",
+                    "timestamp": 124.43445645763711,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero.",
+                    "timestamp": 124.76452132887752,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "Now",
+                    "timestamp": 126.41484568507961,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "let's",
+                    "timestamp": 127.10498132494594,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "start",
+                    "timestamp": 127.37503440141536,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "getting",
+                    "timestamp": 127.61508158049931,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "closer",
+                    "timestamp": 127.85512875958324,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "to",
+                    "timestamp": 128.15518773343817,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 128.27521132298014,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "point.",
+                    "timestamp": 128.3652290151366,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "Zero",
+                    "timestamp": 128.72529978376252,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "zero",
+                    "timestamp": 129.02535875761745,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "notice",
+                    "timestamp": 131.96593670139572,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "how.",
+                    "timestamp": 132.3860192647926,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "The",
+                    "timestamp": 132.50604285433457,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "linear",
+                    "timestamp": 132.65607234126205,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "approximation",
+                    "timestamp": 132.95613131511695,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "doesn't",
+                    "timestamp": 133.91632003145273,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "get",
+                    "timestamp": 134.27639080007862,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "any",
+                    "timestamp": 134.48643208177708,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "better",
+                    "timestamp": 134.69647336347552,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "at",
+                    "timestamp": 134.96652643994494,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "approximating",
+                    "timestamp": 135.11655592687242,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 135.80669156673875,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "function",
+                    "timestamp": 135.8967092588952,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "as",
+                    "timestamp": 136.40680951444858,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "we",
+                    "timestamp": 136.61685079614702,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "approach",
+                    "timestamp": 136.736874385689,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 137.1569569490859,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "year",
+                    "timestamp": 137.21696874385688,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "as",
+                    "timestamp": 137.36699823078433,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "euro.",
+                    "timestamp": 137.4870218203263,
+                    "tags": {
+                        "is_punctuated": true
+                    }
+                }
+            ],
+            "length": 0
+        },
+        {
+            "words": [
+                {
+                    "value": "The",
+                    "timestamp": 138.56723412620403,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "error",
+                    "timestamp": 138.747269510517,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "in",
+                    "timestamp": 139.07733438175742,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "the",
+                    "timestamp": 139.19735797129937,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "linear",
+                    "timestamp": 139.28737566345586,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "approximation",
+                    "timestamp": 139.61744053469627,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "doesn't",
+                    "timestamp": 140.51761745626104,
+                    "tags": {
+                        "is_punctuated": false
+                    }
+                },
+                {
+                    "value": "get",
+                    "timestamp": 140.87768822488695,
+                    
