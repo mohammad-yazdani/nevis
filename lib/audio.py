@@ -1,9 +1,42 @@
+import hashlib
 import os
 import time
 import subprocess
+
+import wave
 from pydub import AudioSegment
 
-from tools.file_io import delete_if_exists
+from tools.file_io  import delete_if_exists
+from tools.hash     import hash_file
+
+
+# TODO : This is temporary. This is NOT a good way to compare audio files
+def get_frames(wav_file):
+    w = wave.open(wav_file, "r")
+
+    nframes = w.getnframes()
+
+    frames = w.readframes(nframes)
+    return frames
+
+# TODO : This is temporary. This is NOT a good way to compare audio files
+def compare_frames(wav1, wav2):
+    frames_one = hash_file(wav1)
+    frames_two = hash_file(wav2)
+
+    return frames_one == frames_two
+
+
+def get_hash(frames):
+    # perf = Perf(take_intervals=True)
+    result = hashlib.md5(frames)
+    return result.hexdigest()  # , perf.elapsed()
+
+
+def audio_hash(audio_file):
+    frames = get_frames(audio_file)
+    h = get_hash(frames)
+    return h
 
 
 def wav_from_mp4(mp4_file):
@@ -14,14 +47,14 @@ def wav_from_mp4(mp4_file):
     currtime = str(int(time.time()))
     with open('/tmp/ffmpeg' + currtime + '.log', "w") as outfile:
         subprocess.run(ffmpeg_command, shell=True, stderr=outfile)
-    
+
     return wav_out
 
 
 def stereo_to_mono(stereo_file):
     mono_out = stereo_file + ".mono"
     delete_if_exists(mono_out)
-    
+
     sound = AudioSegment.from_wav(stereo_file)
     sound = sound.set_channels(1)
     sound.export(mono_out, format="wav")

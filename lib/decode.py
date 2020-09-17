@@ -3,18 +3,23 @@ import os
 
 from tools.file_io import delete_if_exists
 
-MODELDIR = '/mnt/libspeech/model/kaldi-generic-en-tdnn_fl-r20190609'
 
+class Decoder:
+    MODELDIR = '/mnt/libspeech/model/kaldi-generic-en-tdnn_fl-r20190609'
 
-def decode(WAVFILE):
-    try:
-        kaldi_model = KaldiNNet3OnlineModel(MODELDIR)
-        decoder = KaldiNNet3OnlineDecoder(kaldi_model)
+    def __init__(self, model=None):
+        if model is None:
+            model = Decoder.MODELDIR
+        self.model = model
+        self.kaldi_model = KaldiNNet3OnlineModel(self.model)
+        self.decoder = KaldiNNet3OnlineDecoder(self.kaldi_model)
 
-        if decoder.decode_wav_file(WAVFILE):
+    def decode(self, WAVFILE):
+        # try:
+        if self.decoder.decode_wav_file(WAVFILE):
 
-            s, l = decoder.get_decoded_string()
-            align = decoder.get_word_alignment()
+            s, lk = self.decoder.get_decoded_string()
+            align = self.decoder.get_word_alignment()
 
             os.remove(WAVFILE)
 
@@ -24,8 +29,8 @@ def decode(WAVFILE):
 
             out_dict = dict()
             out_dict["transcript"] = s
-            out_dict["likelihood"] = l
-            out_dict["model"] = os.path.basename(MODELDIR)
+            out_dict["likelihood"] = lk
+            out_dict["model"] = os.path.basename(Decoder.MODELDIR)
             out_dict["alignment"] = align
             return out_dict
 
@@ -33,6 +38,6 @@ def decode(WAVFILE):
             print("***ERROR: decoding of %s failed." % WAVFILE)
             return "error"
 
-    except Exception as error:
-        delete_if_exists("/tmp/transcribe.mp4")
-        print("ERROR: " + str(error))
+        # except Exception as error:
+        #     delete_if_exists("/tmp/transcribe.mp4")
+        #     print("ERROR: " + str(error))
