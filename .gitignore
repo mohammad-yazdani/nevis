@@ -1,5 +1,9 @@
 *.mp4
 *__pycache__*
 *.json
+.idea/
 .idea
+__pycache__
+misc
+misc/*
 

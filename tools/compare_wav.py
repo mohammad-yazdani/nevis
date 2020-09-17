@@ -7,17 +7,20 @@ import sys
 from tools.perf import Perf
 
 
+def get_frames(wav_file):
+    w = wave.open(wav_file, "r")
+
+    nframes = w.getnframes()
+
+    frames = w.readframes(nframes)
+    return frames
+
+
 def compare_frames(wav1, wav2):
     perf = Perf(take_intervals=True)
 
-    w_one = wave.open(wav1, "r")
-    w_two = wave.open(wav2, "r")
-
-    nframes_one = w_one.getnframes()
-    nframes_two = w_two.getnframes()
-
-    frames_one = w_one.readframes(nframes_one)
-    frames_two = w_two.readframes(nframes_two)
+    frames_one = get_frames(wav1)
+    frames_two = get_frames(wav2)
 
     if frames_one == frames_two:
         print('exactly the same')
@@ -25,4 +28,7 @@ def compare_frames(wav1, wav2):
         print('not a match')
 
     print(perf.elapsed())
+
+
+compare_frames(sys.argv[1], sys.argv[2])
 
