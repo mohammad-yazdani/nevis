@@ -1,0 +1,11 @@
+#!/bin/bash
+
+perf stat /home/raynor106/speech/server.py $1 &> server.perf &
+SERVER_PID=$!
+nvidia-smi -lms 50 > gpu.perf &
+NVSMI_PID=$!
+
+wait $SERVER_PID
+echo "[$SERVER_PID] Transcription done"
+kill -9 $NVSMI_PID
+
