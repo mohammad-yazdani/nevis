@@ -52,13 +52,15 @@ def prep_and_transcribe(input_filename, model_dir=None, debug=False, use_cache=T
         resolution = cache.get(h)
     else:
         resolution = None
-    if resolution is None:
+    if resolution is None or not use_cache:
+        print("Running decode...")
         # TODO : If not in cache, add to DB
         decode_out = decoder.decode(mono_wav)
 
-        if debug:
-            print(decode_out["transcript"])
-            return 0 # TODO : For perf benching
+        # TODO : Review this
+        # if debug:
+            # print(decode_out["transcript"])
+            # return 0 # TODO : For perf benching
 
         sentences = Sentence.segment(decode_out["transcript"])
 
@@ -139,11 +141,14 @@ if __name__ == '__main__':
         #    model = sys.argv[2]
         for arg_idx in range(1, len(sys.argv)):
             arg = sys.argv[arg_idx]
-            prep_and_transcribe(arg, model, debug=True, use_cache=False)
-            # out = prep_and_transcribe(sys.argv[1], model, debug=True, use_cache=False, text_only=True)
-            # dump = open("dump.json", "w")
-            # json.dump(out, dump, indent=4)
+            out = prep_and_transcribe(sys.argv[1], model, debug=True, use_cache=False)
+            base=os.path.basename(arg)
+            sub_name = os.path.splitext(base)[0]
+            transcript_path = "/home/raynor106/speech/transcripts/" + sub_name + "_transcript_dump.json"
+            dump = open(transcript_path, "w")
+            print(json.dumps(out, indent=4), file=dump)
             print(time.time() - start, "\t|", arg)
+            print(transcript_path)
     else:
         logging.getLogger().setLevel(logging.DEBUG)
         # context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
