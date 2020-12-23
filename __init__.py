@@ -1,15 +1,20 @@
-#!/usr/bin/python3
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
-
 import argparse
 import json
 import logging
-import ssl
 import sys
 import time
+# import ssl
 
-from flask import Flask, request, jsonify, make_response
+from werkzeug.utils import secure_filename
+from flask import (
+    Flask,
+    jsonify,
+    send_from_directory,
+    request,
+    make_response
+)
+from flask_sqlalchemy import SQLAlchemy
 
 from lib.align import compute_alignment
 from lib.audio import prepare_input, audio_hash
@@ -20,7 +25,12 @@ from lib.segment import Sentence
 from lib.word import Word
 from tools.file_io import delete_if_exists
 
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
+
 app = Flask(__name__)
+app.config.from_object("project.config.Config")
+db = SQLAlchemy(app)
 
 lru_policy = LRU(50)
 cache = TranscriptCache(lru_policy)
@@ -40,9 +50,7 @@ def getargs():
     return args.cert, args.key
 
 
-def prep_and_transcribe(input_filename, model_dir=None, debug=False, use_cache=True):
-    # TODO : model_dir is not used because of OOP stuff to save RAM.
-
+def prep_and_transcribe(input_filename, use_cache=True):
     mono_wav, duration = prepare_input(input_filename)
     app.logger.debug("Converted to WAV mono.")
     # Get audio hash
@@ -54,16 +62,9 @@ def prep_and_transcribe(input_filename, model_dir=None, debug=False, use_cache=T
         resolution = None
     if resolution is None or not use_cache:
         print("Running decode...")
-        # TODO : If not in cache, add to DB
+        # If not in cache, add to DB
         decode_out = decoder.decode(mono_wav)
-
-        # TODO : Review this
-        # if debug:
-            # print(decode_out["transcript"])
-            # return 0 # TODO : For perf benching
-
         sentences = Sentence.segment(decode_out["transcript"])
-
         symbols = decode_out["alignment"][0]
         offsets = decode_out["alignment"][1]
         lengths = decode_out["alignment"][2]
@@ -76,12 +77,10 @@ def prep_and_transcribe(input_filename, model_dir=None, debug=False, use_cache=T
             punctuation = s[1]
             segment_idx = 0
             aligned_sentence = list()
-            for segment_idx in range(len(sentence)):
+            for segment_idx in enumerate(sentence):
                 word = sentence[segment_idx]
                 is_punctuation = punctuation[segment_idx] is not None
-                # alignment_value = alignment[w_dim + segment_idx][0]
-                # TODO : This is an important check, but for now we hack around
-                # assert alignment_value in str(word).lower()
+                # This is an important check, but for now we hack around
                 timestamp = alignment[w_dim + segment_idx][1]
 
                 word_obj = Word(word, timestamp)
@@ -92,17 +91,17 @@ def prep_and_transcribe(input_filename, model_dir=None, debug=False, use_cache=T
             aligned_sentences.append(sentence_obj)
             w_dim += segment_idx + 1
 
-        for idx in range(len(aligned_sentences)):
+        for idx in enumerate(aligned_sentences):
             if idx < (len(aligned_sentences) - 1):
                 aligned_sentences[idx].length = aligned_sentences[idx + 1].words[0].timestamp
         aligned_sentences[(len(aligned_sentences) - 1)].length = duration
-        transcript_out = {"duration": duration, "length": len(alignment), "sentences": aligned_sentences}
+        transcript_out = {"duration": duration, "length": len(alignment),
+                          "sentences": aligned_sentences}
 
         if use_cache:
             evicted = cache.add(h, transcript_out)
-            print(evicted)  # TODO : Just for debugging, properly log later
+            print(evicted)  # Just for debugging, properly log later
             transcript_out["from_cache"] = "0"
-        
         return transcript_out
     else:
         resolution["from_cache"] = h
@@ -134,17 +133,46 @@ def transcribe_file():
         app.logger.debug("ERROR: " + str(error))
 
 
+class User(db.Model):
+    __tablename__ = "users"
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(128), unique=True, nullable=False)
+    active = db.Column(db.Boolean(), default=True, nullable=False)
+
+    def __init__(self, email):
+        self.email = email
+
+
+@app.route("/static/<path:filename>")
+def staticfiles(filename):
+    return send_from_directory(app.config["STATIC_FOLDER"], filename)
+
+
+@app.route("/media/<path:filename>")
+def mediafiles(filename):
+    return send_from_directory(app.config["MEDIA_FOLDER"], filename)
+
+
+@app.route("/upload", methods=["GET", "POST"])
+def upload_file():
+    if request.method == "POST":
+        file = request.files["file"]
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config["MEDIA_FOLDER"], filename))
+    return []
+
+
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         model = None
-        # if len(sys.argv) > 2:
-        #    model = sys.argv[2]
         for arg_idx in range(1, len(sys.argv)):
             arg = sys.argv[arg_idx]
-            out = prep_and_transcribe(sys.argv[1], model, debug=True, use_cache=False)
-            base=os.path.basename(arg)
+            out = prep_and_transcribe(sys.argv[1], model)
+            base = os.path.basename(arg)
             sub_name = os.path.splitext(base)[0]
-            transcript_path = "/home/raynor106/speech/transcripts/" + sub_name + "_transcript_dump.json"
+            transcript_path = "/home/raynor106/speech/transcripts/" + sub_name
+            transcript_path += "_transcript_dump.json"
             dump = open(transcript_path, "w")
             print(json.dumps(out, indent=4), file=dump)
             print(time.time() - start, "\t|", arg)
