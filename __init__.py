@@ -1,3 +1,4 @@
+from lib.timed_queue import TimedQueue
 import os
 import argparse
 import json
@@ -36,9 +37,13 @@ cache = TranscriptCache(lru_policy)
 
 # Loading Kaldi stuff
 start = time.time()
-decoder = Decoder()
+aspire_decoder = Decoder("aspire")
+aspire_decoder.initalize()
+librispeech_decoder = Decoder("librispeech")
+librispeech_decoder.initalize()
 print(time.time() - start, "\t|", "Kaldi loaded!")
 
+timedQueue = TimedQueue()
 
 def getargs():
     parser = argparse.ArgumentParser()
@@ -49,63 +54,47 @@ def getargs():
     return args.cert, args.key
 
 
-def transcript_queue(input_filename, use_cache=True):
-    mono_wav, duration = prepare_input(input_filename)
-    app.logger.debug("Converted to WAV mono.")
-    # Get audio hash
-    h = audio_hash(mono_wav)
-    # Check cache
+def transcript_queue(input_filename):
+    timedQueue.accept(input_filename)
+
+    sentences = Sentence.segment(decode_out["transcript"])
+    symbols = decode_out["alignment"][0]
+    offsets = decode_out["alignment"][1]
+    lengths = decode_out["alignment"][2]
+    alignment = compute_alignment(symbols, offsets, lengths, duration)
+
+    w_dim = 0
+    aligned_sentences = list()
+    for s in sentences:
+        sentence = s[0]
+        punctuation = s[1]
+        segment_idx = 0
+        aligned_sentence = list()
+        for segment_idx in enumerate(sentence):
+            word = sentence[segment_idx]
+            is_punctuation = punctuation[segment_idx] is not None
+            # This is an important check, but for now we hack around
+            timestamp = alignment[w_dim + segment_idx][1]
+
+            word_obj = Word(word, timestamp)
+            word_obj.add_tag("is_punctuated", is_punctuation)
+            aligned_sentence.append(word_obj)
+
+        sentence_obj = Sentence(aligned_sentence, 0)
+        aligned_sentences.append(sentence_obj)
+        w_dim += segment_idx  + 1
+
+    for idx in enumerate(aligned_sentences):
+        if idx < (len(aligned_sentences) - 1):
+            aligned_sentences[idx].length = aligned_sentences[idx + 1].words[0].timestamp
+    aligned_sentences[(len(aligned_sentences) - 1)].length = duration
+    transcript_out = {"duration": duration, "length": len(alignment), "sentences": aligned_sentences}
+
     if use_cache:
-        resolution = cache.get(h)
-    else:
-        resolution = None
-    if resolution is None or not use_cache:
-        print("Running decode...")
-        # If not in cache, add to DB
-        decoder.decode_batch()
-        sentences = Sentence.segment(decode_out["transcript"])
-        symbols = decode_out["alignment"][0]
-        offsets = decode_out["alignment"][1]
-        lengths = decode_out["alignment"][2]
-        alignment = compute_alignment(symbols, offsets, lengths, duration)
-
-        w_dim = 0
-        aligned_sentences = list()
-        for s in sentences:
-            sentence = s[0]
-            punctuation = s[1]
-            segment_idx = 0
-            aligned_sentence = list()
-            for segment_idx in enumerate(sentence):
-                word = sentence[segment_idx]
-                is_punctuation = punctuation[segment_idx] is not None
-                # This is an important check, but for now we hack around
-                timestamp = alignment[w_dim + segment_idx][1]
-
-                word_obj = Word(word, timestamp)
-                word_obj.add_tag("is_punctuated", is_punctuation)
-                aligned_sentence.append(word_obj)
-
-            sentence_obj = Sentence(aligned_sentence, 0)
-            aligned_sentences.append(sentence_obj)
-            w_dim += segment_idx  + 1
-
-        for idx in enumerate(aligned_sentences):
-            if idx < (len(aligned_sentences) - 1):
-                aligned_sentences[idx].length = aligned_sentences[idx + 1].words[0].timestamp
-        aligned_sentences[(len(aligned_sentences) - 1)].length = duration
-        transcript_out = {"duration": duration, "length": len(alignment),
-                          "sentences": aligned_sentences}
-
-        if use_cache:
-            evicted = cache.add(h, transcript_out)
-            print(evicted)  # Just for debugging, properly log later
-            transcript_out["from_cache"] = "0"
-        return transcript_out
-    else:
-        resolution["from_cache"] = h
-        return resolution
-
+        evicted = cache.add(h, transcript_out)
+        print(evicted)  # Just for debugging, properly log later
+        transcript_out["from_cache"] = "0"
+    return transcript_out
 
 @app.route('/')
 def run():

@@ -48,3 +48,5 @@ class Batch(Thread):
             os.mkdir(self.batch_path)
             for d in self.batch:
                 os.symlink(d.wav_path, os.path.join(self.batch_path, d.basename))
+            # TODO : Do decoding
+            # TODO : Do alignment

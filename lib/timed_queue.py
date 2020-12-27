@@ -20,7 +20,7 @@ class TimedQueue(Process):
             self.make_batch()
 
     def accept(self, media: str):
-        self.ready.put_nowait(Audio())
+        self.ready.put_nowait(Audio.prepare(media))
 
     def make_batch(self):
         batch = Batch()

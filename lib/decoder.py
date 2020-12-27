@@ -1,15 +1,15 @@
+from lib.batch import Batch
 from subprocess import Popen, PIPE
 from typing import List
 import os
 import logging
 
 class Decoder:
-    def __init__(self, name: str, dataset: str, iteration: int = 1, max_active: int = 20000, max_batch_size=100) -> None:
+    def __init__(self, name: str, iteration: int = 1, max_active: int = 20000, max_batch_size=100) -> None:
         super().__init__()
         self.name = name
         
         self.env = os.environ.copy()
-        self.env["DATASET"] = dataset
         self.env["ITERATIONS"] = iteration
         self.env["MAX_ACTIVE"] = max_active
         self.env["MAX_BATCH_SIZE"] = max_batch_size
@@ -23,17 +23,19 @@ class Decoder:
 
     def initalize(self) -> None:
         prep_process = Popen(["/bin/bash", self.prep_command], stdin=PIPE, check_call=True, check_output=True)        
-        stdout, stderr = prep_process.communicate() # TODO : Log
+        stdout, stderr = prep_process.communicate()
         logging.debug(stdout)
         logging.debug(stderr)
 
-    def decode_batch(self) -> list:
+    def decode_batch(self, batch: Batch) -> list:
         # set environment, start new shell
-        prep_process = Popen(["/bin/bash", self.prep_command], stdin=PIPE, env=self.env, check_call=True, check_output=True)
-        stdout, stderr = prep_process.communicate() # TODO : Log
+        batch_env = self.env
+        batch_env["DATASET"] = batch.batch_path
+        prep_process = Popen(["/bin/bash", self.prep_command], stdin=PIPE, env=batch_env, check_call=True, check_output=True)
+        stdout, stderr = prep_process.communicate()
         logging.debug(stdout)
         logging.debug(stderr)
-        
+
         if self.last_run is not None:
             self.last_run += 1
         else:
@@ -52,7 +54,7 @@ class Decoder:
         f.close()
         return transcript
 
-    def get_indices(self, run_id: int = None, id: int = 0) -> List[int]:
+    def get_alignment(self, run_id: int = None, id: int = 0) -> List[int]:
         if run_id is None:
             run_id = self.last_run
         trans_file = os.path.join(self.result_dir, str(run_id), str(id), "trans_int_combined")
