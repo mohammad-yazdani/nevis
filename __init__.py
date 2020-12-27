@@ -20,7 +20,7 @@ from lib.align import compute_alignment
 from lib.audio import prepare_input, audio_hash
 from lib.caching.LRU import LRU
 from lib.caching.store import TranscriptCache
-from lib.decode import Decoder
+from lib.decoder import Decoder
 from lib.segment import Sentence
 from lib.word import Word
 from tools.file_io import delete_if_exists
@@ -50,7 +50,7 @@ def getargs():
     return args.cert, args.key
 
 
-def prep_and_transcribe(input_filename, use_cache=True):
+def transcript_queue(input_filename, use_cache=True):
     mono_wav, duration = prepare_input(input_filename)
     app.logger.debug("Converted to WAV mono.")
     # Get audio hash
@@ -63,7 +63,7 @@ def prep_and_transcribe(input_filename, use_cache=True):
     if resolution is None or not use_cache:
         print("Running decode...")
         # If not in cache, add to DB
-        decode_out = decoder.decode(mono_wav)
+        decoder.decode_batch()
         sentences = Sentence.segment(decode_out["transcript"])
         symbols = decode_out["alignment"][0]
         offsets = decode_out["alignment"][1]
@@ -89,7 +89,7 @@ def prep_and_transcribe(input_filename, use_cache=True):
 
             sentence_obj = Sentence(aligned_sentence, 0)
             aligned_sentences.append(sentence_obj)
-            w_dim += segment_idx + 1
+            w_dim += segment_idx  + 1
 
         for idx in enumerate(aligned_sentences):
             if idx < (len(aligned_sentences) - 1):
@@ -133,6 +133,7 @@ def transcribe_file():
         app.logger.debug("ERROR: " + str(error))
 
 
+# TODO : TEST
 class User(db.Model):
     __tablename__ = "users"
 
@@ -143,16 +144,13 @@ class User(db.Model):
     def __init__(self, email):
         self.email = email
 
-
 @app.route("/static/<path:filename>")
 def staticfiles(filename):
     return send_from_directory(app.config["STATIC_FOLDER"], filename)
 
-
 @app.route("/media/<path:filename>")
 def mediafiles(filename):
     return send_from_directory(app.config["MEDIA_FOLDER"], filename)
-
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload_file():
@@ -161,6 +159,7 @@ def upload_file():
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config["MEDIA_FOLDER"], filename))
     return []
+# TODO : TEST
 
 
 if __name__ == '__main__':

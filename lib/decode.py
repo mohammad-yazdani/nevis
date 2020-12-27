@@ -1,43 +1,44 @@
-from kaldiasr.nnet3 import KaldiNNet3OnlineModel, KaldiNNet3OnlineDecoder
+from dataclasses import dataclass, field
+from threading import Thread
+from typing import List
 import os
 
-from tools.file_io import delete_if_exists
+MAX_BATCH_SIZE = 10     # Max number of Decodings in a batch 
 
+class BatchFull(Exception):
+    def __init__(self, *args: object) -> None:
+        super(BatchFull, self).__init__(*args)
 
-class Decoder:
-    MODELDIR = '/mnt/libspeech/model/kaldi-generic-en-tdnn_fl-r20190609'
+@dataclass(order=True)
+class ToDecode:
+    priority: int
+    wav_path: str=field(compare=False)
+    duration: int=field(compare=False)
 
-    def __init__(self, model=None):
-        if model is None:
-            model = Decoder.MODELDIR
-        self.model = model
-        self.kaldi_model = KaldiNNet3OnlineModel(self.model)
-        self.decoder = KaldiNNet3OnlineDecoder(self.kaldi_model)
+    def __init__(self, wav_path: str, duration: int, priority: int = 1) -> None:
+        super().__init__()
+        self.priority = priority
+        self.wav_path = wav_path
+        self.duration = duration
 
-    def decode(self, WAVFILE):
-        # try:
-        if self.decoder.decode_wav_file(WAVFILE):
+class Decode(Thread):
+    batch: List[ToDecode]
 
-            s, lk = self.decoder.get_decoded_string()
-            align = self.decoder.get_word_alignment()
+    def __init__(self) -> None:
+        super(Decode, self).__init__()
+        self.batch = []
 
-            os.remove(WAVFILE)
-
-            for word_idx in range(len(align[0])):
-                str_word = align[0][word_idx].decode("utf-8")
-                align[0][word_idx] = str_word
-
-            out_dict = dict()
-            out_dict["transcript"] = s
-            out_dict["likelihood"] = lk
-            out_dict["model"] = os.path.basename(Decoder.MODELDIR)
-            out_dict["alignment"] = align
-            return out_dict
-
+    def add(self, td: ToDecode):
+        if len(self.batch) == MAX_BATCH_SIZE:
+            raise BatchFull
         else:
-            print("***ERROR: decoding of %s failed." % WAVFILE)
-            return "error"
+            self.batch.append(td)
 
-        # except Exception as error:
-        #     delete_if_exists("/tmp/transcribe.mp4")
-        #     print("ERROR: " + str(error))
+    def run(self):
+        # print(os.getpid(), self.native_id, "run")
+        
+        if len(self.batch) == 0:
+            print(os.getpid(), self.native_id, "empty batch")
+            return
+        for d in self.batch:
+            print(os.getpid(), self.native_id, d.wav_path, d.duration)
