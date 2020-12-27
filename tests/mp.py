@@ -3,7 +3,7 @@ from random import randint
 from typing import List
 from time import sleep
 
-from lib.decode import ToDecode
+from lib.batch import ToDecode
 from lib.timed_queue import TimedQueue
 
 def main():

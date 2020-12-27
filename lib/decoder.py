@@ -1,16 +1,9 @@
+from subprocess import Popen, PIPE
+from typing import List
 import os
-from subprocess import Popen, PIPE, check_call, check_output, run
-from typing import Dict, List
+import logging
 
 class Decoder:
-    env: Dict[str, str]
-    name: str
-    model_dir: str
-    result_dir: str
-    prep_command: str
-    batch_command: str
-    last_run: int
-
     def __init__(self, name: str, dataset: str, iteration: int = 1, max_active: int = 20000, max_batch_size=100) -> None:
         super().__init__()
         self.name = name
@@ -29,13 +22,18 @@ class Decoder:
         self.last_run = None
 
     def initalize(self) -> None:
-        prep_process = Popen(["/bin/bash", self.prep_command], stdin=PIPE, check_call=True, check_output=True)
+        prep_process = Popen(["/bin/bash", self.prep_command], stdin=PIPE, check_call=True, check_output=True)        
         stdout, stderr = prep_process.communicate() # TODO : Log
+        logging.debug(stdout)
+        logging.debug(stderr)
 
     def decode_batch(self) -> list:
         # set environment, start new shell
         prep_process = Popen(["/bin/bash", self.prep_command], stdin=PIPE, env=self.env, check_call=True, check_output=True)
         stdout, stderr = prep_process.communicate() # TODO : Log
+        logging.debug(stdout)
+        logging.debug(stderr)
+        
         if self.last_run is not None:
             self.last_run += 1
         else:

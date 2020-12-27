@@ -16,7 +16,6 @@ from flask import (
 )
 from flask_sqlalchemy import SQLAlchemy
 
-from lib.align import compute_alignment
 from lib.audio import prepare_input, audio_hash
 from lib.caching.LRU import LRU
 from lib.caching.store import TranscriptCache

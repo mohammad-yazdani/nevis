@@ -1,6 +1,8 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from threading import Thread
 from typing import List
+from lib.audio import Audio
+from tools.file_io  import delete_if_exists
 import os
 
 MAX_BATCH_SIZE = 10     # Max number of Decodings in a batch 
@@ -9,24 +11,27 @@ class BatchFull(Exception):
     def __init__(self, *args: object) -> None:
         super(BatchFull, self).__init__(*args)
 
+
 @dataclass(order=True)
 class ToDecode:
-    priority: int
-    wav_path: str=field(compare=False)
-    duration: int=field(compare=False)
 
     def __init__(self, wav_path: str, duration: int, priority: int = 1) -> None:
         super().__init__()
         self.priority = priority
         self.wav_path = wav_path
         self.duration = duration
+        self.basename = os.path.basename(wav_path)
 
-class Decode(Thread):
-    batch: List[ToDecode]
+
+class Batch(Thread):
+    batch_idx: int = 0
 
     def __init__(self) -> None:
-        super(Decode, self).__init__()
-        self.batch = []
+        super(Batch, self).__init__()
+        self.batch_id = 0
+        Batch.batch_idx += 1
+        self.batch: List[ToDecode] = []
+        self.batch_path = os.path.join(Audio.get_prefix(), "batch", str(self.batch_id))
 
     def add(self, td: ToDecode):
         if len(self.batch) == MAX_BATCH_SIZE:
@@ -35,10 +40,11 @@ class Decode(Thread):
             self.batch.append(td)
 
     def run(self):
-        # print(os.getpid(), self.native_id, "run")
-        
         if len(self.batch) == 0:
             print(os.getpid(), self.native_id, "empty batch")
             return
-        for d in self.batch:
-            print(os.getpid(), self.native_id, d.wav_path, d.duration)
+        else:
+            delete_if_exists(self.batch_path)
+            os.mkdir(self.batch_path)
+            for d in self.batch:
+                os.symlink(d.wav_path, os.path.join(self.batch_path, d.basename))
