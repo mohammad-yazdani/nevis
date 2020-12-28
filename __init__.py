@@ -57,12 +57,13 @@ def getargs():
 def transcript_queue(input_filename):
     timedQueue.accept(input_filename)
 
-    sentences = Sentence.segment(decode_out["transcript"])
-    symbols = decode_out["alignment"][0]
-    offsets = decode_out["alignment"][1]
-    lengths = decode_out["alignment"][2]
-    alignment = compute_alignment(symbols, offsets, lengths, duration)
-
+    batch_id: int = 0 # TODO : Proper
+    corpus_id: int = 0 # TODO : Proper
+    
+    transcript = librispeech_decoder.get_trans(batch_id, corpus_id)
+    alignment = librispeech_decoder.get_alignment(batch_id, corpus_id)
+    sentences = Sentence.segment(transcript)
+    
     w_dim = 0
     aligned_sentences = list()
     for s in sentences:

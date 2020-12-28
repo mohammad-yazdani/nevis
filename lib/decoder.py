@@ -45,19 +45,19 @@ class Decoder:
         if os.path.exists(self.result_dir):
             os.rmdir(self.result_dir)
 
-    def get_trans(self, run_id: int = None, id: int = 0) -> List[str]:
-        if run_id is None:
-            run_id = self.last_run
-        trans_file = os.path.join(self.result_dir, str(run_id), str(id), "trans")
+    def get_trans(self, batch_id: int = None, id: int = 0) -> List[str]:
+        if batch_id is None:
+            batch_id = self.last_run
+        trans_file = os.path.join(self.result_dir, str(batch_id), str(id), "trans")
         f = open(trans_file)
         transcript: str = f.read()
         f.close()
         return transcript
 
-    def get_alignment(self, run_id: int = None, id: int = 0) -> List[int]:
-        if run_id is None:
-            run_id = self.last_run
-        trans_file = os.path.join(self.result_dir, str(run_id), str(id), "trans_int_combined")
+    def get_alignment(self, batch_id: int = None, id: int = 0) -> List[int]:
+        if batch_id is None:
+            batch_id = self.last_run
+        trans_file = os.path.join(self.result_dir, str(batch_id), str(id), "trans_int_combined")
         f = open(trans_file)
         transcript: str = f.read()
         f.close()
