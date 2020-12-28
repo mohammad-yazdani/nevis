@@ -50,16 +50,52 @@ class Decoder:
             batch_id = self.last_run
         trans_file = os.path.join(self.result_dir, str(batch_id), str(id), "trans")
         f = open(trans_file)
-        transcript: str = f.read()
+        transcript: str = f.read().split()
         f.close()
         return transcript
 
+    # TODO : This alignment logic needs a review
     def get_alignment(self, batch_id: int = None, id: int = 0) -> List[int]:
         if batch_id is None:
             batch_id = self.last_run
+
+        batch_env = self.env
+        prep_process = Popen(["/bin/bash", "gzip", "-d", os.path.join(self.result_dir, str(batch_id), str(id), "lat_aligned.gz")], stdin=PIPE, env=batch_env, check_call=True, check_output=True)
+        stdout, stderr = prep_process.communicate()
+        logging.debug(stdout)
+        logging.debug(stderr)
+
+        ctm_file = os.path.join(self.result_dir, str(batch_id), str(id), "1.ctm")
+        
+        lattice_align_command: List[str] = ["/bin/bash"]
+        lattice_align_command.append("/opt/kaldi/src/latbin/lattice-align-words-lexicon --partial-word-label=4324 /workspace/models/aspire/data/lang_chain/phones/align_lexicon.int /workspace/models/aspire/final.mdl".split() )
+        lattice_align_command.append("ark:" + os.path.join(self.result_dir, str(batch_id), str(id), "lat_aligned"))
+        lattice_align_command.append("ark:- | /opt/kaldi/src/latbin/lattice-1best ark:- ark:- | /opt/kaldi/src/latbin/nbest-to-ctm ark:-".split())
+        lattice_align_command.append(ctm_file)
+        prep_process = Popen(lattice_align_command, stdin=PIPE, env=batch_env, check_call=True, check_output=True)
+        stdout, stderr = prep_process.communicate()
+        logging.debug(stdout)
+        logging.debug(stderr)
+
         trans_file = os.path.join(self.result_dir, str(batch_id), str(id), "trans_int_combined")
-        f = open(trans_file)
-        transcript: str = f.read()
-        f.close()
-        tokens = transcript.split()
-        return list(map(lambda x: int(x), tokens))
+        idxwords = open(trans_file).read()
+        rawlats = open(ctm_file).readlines()
+
+        lats = []
+        words = self.get_trans(batch_id, id)
+        idx = idxwords.split()
+        idx = list(map(lambda x: int(x), idx[1:]))
+        for l in rawlats:
+	        ln_data = l.split()[3:]
+	        lats.append([float(ln_data[0]), int(ln_data[1])])
+
+        word_table = dict()
+        alignment = []
+        for i in range(len(words)):
+	        word_table[idx[i]] = words[i]
+        offset = 0.0
+        for i in range(len(words)):
+            offset += lats[i][0]
+            alignment.append([word_table[lats[i][1]], offset - lats[i][0]])
+
+        return alignment, offset

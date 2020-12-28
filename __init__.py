@@ -57,11 +57,11 @@ def getargs():
 def transcript_queue(input_filename):
     timedQueue.accept(input_filename)
 
-    batch_id: int = 0 # TODO : Proper
-    corpus_id: int = 0 # TODO : Proper
+    batch_id: int = 0 # TODO : Test then Proper
+    corpus_id: int = 0 # TODO : Test then Proper
     
     transcript = librispeech_decoder.get_trans(batch_id, corpus_id)
-    alignment = librispeech_decoder.get_alignment(batch_id, corpus_id)
+    alignment, duration = librispeech_decoder.get_alignment(batch_id, corpus_id)
     sentences = Sentence.segment(transcript)
     
     w_dim = 0
@@ -91,10 +91,6 @@ def transcript_queue(input_filename):
     aligned_sentences[(len(aligned_sentences) - 1)].length = duration
     transcript_out = {"duration": duration, "length": len(alignment), "sentences": aligned_sentences}
 
-    if use_cache:
-        evicted = cache.add(h, transcript_out)
-        print(evicted)  # Just for debugging, properly log later
-        transcript_out["from_cache"] = "0"
     return transcript_out
 
 @app.route('/')
@@ -114,7 +110,7 @@ def transcribe_file():
         mp4.close()
         app.logger.debug("Read MP4.")
 
-        dict_obj = prep_and_transcribe(input_filename)
+        dict_obj = transcript_queue(input_filename)
         delete_if_exists(input_filename)
         return make_response(jsonify(dict_obj), 200)
     except Exception as error:
@@ -156,7 +152,7 @@ if __name__ == '__main__':
         model = None
         for arg_idx in range(1, len(sys.argv)):
             arg = sys.argv[arg_idx]
-            out = prep_and_transcribe(sys.argv[1], model)
+            out = transcript_queue(sys.argv[1], model)
             base = os.path.basename(arg)
             sub_name = os.path.splitext(base)[0]
             transcript_path = "/home/raynor106/speech/transcripts/" + sub_name
