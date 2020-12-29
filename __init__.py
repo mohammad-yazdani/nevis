@@ -1,3 +1,4 @@
+from typing import Tuple
 from lib.timed_queue import TimedQueue
 import os
 import argparse
@@ -16,8 +17,6 @@ from flask import (
     make_response
 )
 from flask_sqlalchemy import SQLAlchemy
-
-from lib.audio import prepare_input, audio_hash
 from lib.caching.LRU import LRU
 from lib.caching.store import TranscriptCache
 from lib.decoder import Decoder
@@ -25,11 +24,10 @@ from lib.segment import Sentence
 from lib.word import Word
 from tools.file_io import delete_if_exists
 
-
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
 
 app = Flask(__name__)
-app.config.from_object("project.config.Config")
+# app.config.from_object("project.config.Config")
 db = SQLAlchemy(app)
 
 lru_policy = LRU(50)
@@ -37,15 +35,17 @@ cache = TranscriptCache(lru_policy)
 
 # Loading Kaldi stuff
 start = time.time()
-aspire_decoder = Decoder("aspire")
-aspire_decoder.initalize()
-librispeech_decoder = Decoder("librispeech")
-librispeech_decoder.initalize()
+aspire_decoder = Decoder("aspire", 8000)
+if not os.path.exists("/workspace/nvidia-examples/aspire/run_benchmark.sh"):
+    aspire_decoder.initalize()
+# librispeech_decoder = Decoder("librispeech")
+# if not os.path.exists("/workspace/nvidia-examples/librispeech/run_benchmark.sh"):
+    # librispeech_decoder.initalize()
 print(time.time() - start, "\t|", "Kaldi loaded!")
 
-timedQueue = TimedQueue()
+timedQueue = TimedQueue(aspire_decoder)
 
-def getargs():
+def getargs() -> Tuple[str, str]:
     parser = argparse.ArgumentParser()
     parser.add_argument('--cert', required=True)
     parser.add_argument('--key', required=True)
@@ -54,50 +54,14 @@ def getargs():
     return args.cert, args.key
 
 
-def transcript_queue(input_filename):
-    timedQueue.accept(input_filename)
-
-    batch_id: int = 0 # TODO : Test then Proper
-    corpus_id: int = 0 # TODO : Test then Proper
-    
-    transcript = librispeech_decoder.get_trans(batch_id, corpus_id)
-    alignment, duration = librispeech_decoder.get_alignment(batch_id, corpus_id)
-    sentences = Sentence.segment(transcript)
-    
-    w_dim = 0
-    aligned_sentences = list()
-    for s in sentences:
-        sentence = s[0]
-        punctuation = s[1]
-        segment_idx = 0
-        aligned_sentence = list()
-        for segment_idx in enumerate(sentence):
-            word = sentence[segment_idx]
-            is_punctuation = punctuation[segment_idx] is not None
-            # This is an important check, but for now we hack around
-            timestamp = alignment[w_dim + segment_idx][1]
-
-            word_obj = Word(word, timestamp)
-            word_obj.add_tag("is_punctuated", is_punctuation)
-            aligned_sentence.append(word_obj)
-
-        sentence_obj = Sentence(aligned_sentence, 0)
-        aligned_sentences.append(sentence_obj)
-        w_dim += segment_idx  + 1
-
-    for idx in enumerate(aligned_sentences):
-        if idx < (len(aligned_sentences) - 1):
-            aligned_sentences[idx].length = aligned_sentences[idx + 1].words[0].timestamp
-    aligned_sentences[(len(aligned_sentences) - 1)].length = duration
-    transcript_out = {"duration": duration, "length": len(alignment), "sentences": aligned_sentences}
-
-    return transcript_out
+def transcript_queue(input_filename) -> Tuple[int, int]:
+    bathc_id, corpus_id = timedQueue.accept(input_filename, aspire_decoder)
+    return bathc_id, corpus_id
 
 @app.route('/')
 def run():
     app.logger.debug('inside /')
     return "call /transcribe"
-
 
 @app.route('/transcribe_file', methods=['POST'])
 def transcribe_file():
@@ -109,14 +73,69 @@ def transcribe_file():
         mp4.write(mp4_byte_buffer)
         mp4.close()
         app.logger.debug("Read MP4.")
-
-        dict_obj = transcript_queue(input_filename)
-        delete_if_exists(input_filename)
-        return make_response(jsonify(dict_obj), 200)
+        batch_id, corpus_id = transcript_queue(input_filename)
+        return make_response(jsonify({
+            "batch_id": batch_id,
+            "corpus_id": corpus_id
+        }), 200)
     except Exception as error:
         delete_if_exists("/tmp/transcribe.mp4")
         app.logger.debug("ERROR: " + str(error))
 
+@app.route('/get_transcript', methods=['GET'])
+def get_transcript():
+    batch_id = int(request.args.get("batch_id"))
+    corpus_id = int(request.args.get("corpus_id"))
+    
+    transcript = aspire_decoder.get_trans(batch_id, corpus_id)
+    alignment, duration = aspire_decoder.get_alignment(batch_id, corpus_id)
+    
+    # sentences = Sentence.segment(transcript)
+    # TODO : Because tensorflow is dumb, I'm gonna consider every 5 words a sentence
+    tokens = transcript.split()
+    sentences = []
+    for index in range(len(tokens)):
+        sntsz = len(sentences)
+        if sntsz < (int(index / 5) + 1):
+            sentences.append([])
+        word = tokens[int(index)]
+        sentences[int(index / 5)].append(word)
+
+    w_dim = 0
+    aligned_sentences = list()
+    for s in sentences:
+        # TODO : LSTM stuff
+        # sentence = s[0]
+        # punctuation = s[1]
+        sentence = s
+
+        segment_idx = 0
+        aligned_sentence = list()
+        for segment_idx, _ in enumerate(sentence):
+            word = sentence[segment_idx]
+
+            # TODO : LSTM stuff
+            # is_punctuation = punctuation[segment_idx] is not None
+            is_punctuation = False
+
+            # This is an important check, but for now we hack around
+            timestamp = alignment[w_dim + segment_idx][1]
+
+            word_obj = Word(word, timestamp)
+            word_obj.add_tag("is_punctuated", is_punctuation)
+            aligned_sentence.append(word_obj)
+
+        sentence_obj = Sentence(aligned_sentence, 0)
+        aligned_sentences.append(sentence_obj)
+        w_dim += segment_idx  + 1
+
+    for idx, _ in enumerate(aligned_sentences):
+        if idx < (len(aligned_sentences) - 1):
+            aligned_sentences[idx].length = aligned_sentences[idx + 1].words[0].timestamp
+    aligned_sentences[(len(aligned_sentences) - 1)].length = duration
+    transcript_out = {"duration": duration, "length": len(alignment), "sentences": aligned_sentences}
+
+    return transcript_out
 
 # TODO : TEST
 class User(db.Model):
@@ -148,6 +167,8 @@ def upload_file():
 
 
 if __name__ == '__main__':
+    timedQueue.start()
+
     if len(sys.argv) > 1:
         model = None
         for arg_idx in range(1, len(sys.argv)):

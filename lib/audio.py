@@ -1,21 +1,19 @@
 from lib.batch import ToDecode
 import os
-import time
 import subprocess
-from pydub import AudioSegment
 from tools.file_io  import delete_if_exists
+from pydub.audio_segment import AudioSegment
 
 class Audio:
     epoch: int = 0
 
     @staticmethod
-    def prepare(self, mp4_file) -> ToDecode:
-        wav_out = os.path.join(self.prefix, "audio" + str(self.epoch) + ".wav")
+    def prepare(mp4_file: str, bit_rate: int) -> ToDecode:
+        wav_out = os.path.join(Audio.get_prefix(), "audio" + str(Audio.epoch) + ".wav")
         delete_if_exists(wav_out)
-        self.epoch += 1
-        ffmpeg_command = "ffmpeg -i " + mp4_file + " -vn -acodec pcm_s16le -ar 16000 -ac 2 " + wav_out
-        currtime = str(int(time.time()))
-        with open('/tmp/ffmpeg' + currtime + '.log', "w") as outfile:
+        Audio.epoch += 1
+        ffmpeg_command = "ffmpeg -i " + mp4_file + " -vn -acodec pcm_s16le -ar " + str(bit_rate) + " -ac 2 " + wav_out        
+        with open('/dev/null', "w") as outfile:
             subprocess.run(ffmpeg_command, shell=True, stderr=outfile)
         sound = AudioSegment.from_wav(wav_out)
         sound = sound.set_channels(1)
@@ -28,7 +26,7 @@ class Audio:
 
     # Code straight from https://stackoverflow.com/a/3844467
     @staticmethod
-    def _media_duration(filename):
+    def _media_duration(filename) -> float:
         result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
             "format=duration", "-of",
             "default=noprint_wrappers=1:nokey=1", filename],
