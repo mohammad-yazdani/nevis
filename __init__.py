@@ -16,7 +16,9 @@ from flask import (
     request,
     make_response
 )
-from flask_sqlalchemy import SQLAlchemy
+
+from deepsegment import DeepSegment
+# from flask_sqlalchemy import SQLAlchemy
 from lib.caching.LRU import LRU
 from lib.caching.store import TranscriptCache
 from lib.decoder import Decoder
@@ -28,7 +30,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
 
 app = Flask(__name__)
 # app.config.from_object("project.config.Config")
-db = SQLAlchemy(app)
+# db = SQLAlchemy(app) TODO
 
 lru_policy = LRU(50)
 cache = TranscriptCache(lru_policy)
@@ -44,6 +46,8 @@ if not os.path.exists("/workspace/nvidia-examples/aspire/run_benchmark.sh"):
 print(time.time() - start, "\t|", "Kaldi loaded!")
 
 timedQueue = TimedQueue(aspire_decoder)
+segmenter = DeepSegment("en", tf_serving=False)
+
 
 def getargs() -> Tuple[str, str]:
     parser = argparse.ArgumentParser()
@@ -93,7 +97,7 @@ def get_transcript():
     sentences = []
     use_LSTM = True
     if use_LSTM:
-        sentences = Sentence.segment(transcript)
+        sentences = segmenter.segment_long(transcript)
     else:    
         # TODO : Because tensorflow is dumb, I'm gonna consider every 5 words a sentence
         tokens = transcript.split()
@@ -144,15 +148,15 @@ def get_transcript():
     return transcript_out
 
 # TODO : TEST
-class User(db.Model):
-    __tablename__ = "users"
+# class User(db.Model):
+#     __tablename__ = "users"
 
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(128), unique=True, nullable=False)
-    active = db.Column(db.Boolean(), default=True, nullable=False)
+#     id = db.Column(db.Integer, primary_key=True)
+#     email = db.Column(db.String(128), unique=True, nullable=False)
+#     active = db.Column(db.Boolean(), default=True, nullable=False)
 
-    def __init__(self, email):
-        self.email = email
+#     def __init__(self, email):
+#         self.email = email
 
 @app.route("/static/<path:filename>")
 def staticfiles(filename):

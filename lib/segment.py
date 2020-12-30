@@ -1,5 +1,4 @@
-from deepsegment import DeepSegment
-from deepcorrect import DeepCorrect
+# from deepcorrect import DeepCorrect
 
 PARAMS_PATH = "/mnt/libspeech/model/deep_punct/deeppunct_params_en"
 CHECKPOINT_PATH = "/mnt/libspeech/model/deep_punct/deeppunct_checkpoint_wikipedia"
@@ -11,6 +10,13 @@ class Sentence(dict):
         super().__init__(words=words, length=length)
         self.words = words
         self.length = length
+
+
+class Segmenter:
+
+    def __init__(self, segmenter) -> None:
+        super().__init__()
+        self.segmenter = segmenter
 
     @staticmethod
     def _extract_words(segment, punctuated):
@@ -41,21 +47,19 @@ class Sentence(dict):
 
         return puncted_words, puncted_indexes
 
-    @staticmethod
-    def _punctuate(sentences):
-        corrector = DeepCorrect(params_path=PARAMS_PATH, checkpoint_path=CHECKPOINT_PATH)
-        corrections = list()
-        for s in sentences:
-            correction = corrector.correct(s)[0]["sequence"]
-            corrections.append(correction)
-        return corrections
+    # TODO : Use later
+    # @staticmethod
+    # def _punctuate(sentences):
+    #     corrector = DeepCorrect(params_path=PARAMS_PATH, checkpoint_path=CHECKPOINT_PATH)
+    #     corrections = list()
+    #     for s in sentences:
+    #        correction = corrector.correct(s)[0]["sequence"]
+    #        corrections.append(correction)
+    #    return corrections
 
-    @staticmethod
-    def segment(transcript):
+    def segment(self, transcript):
         # The default language is 'en'
-        segmenter = DeepSegment("en", tf_serving=False)
-
-        segments = segmenter.segment_long(transcript)
+        segments = self.segmenter.segment_long(transcript)
         # puncted_sequences = Sentence._punctuate(segments)
         # TODO : Quick fix hack
         puncted_sequences = segments 

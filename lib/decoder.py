@@ -87,17 +87,24 @@ class Decoder:
         words = self.get_trans(batch_id, id).split()
 
         idx = idxwords.split()
-        idx = list(map(lambda x: int(x), idx[1:]))
+        parse_list = idx
+        idx = []
+        for p in parse_list:
+            try:
+                idx.append(int(p))
+            except ValueError:
+                pass
         for l in rawlats:
 	        ln_data = l.split()[3:]
 	        lats.append([float(ln_data[0]), int(ln_data[1])])
 
         word_table = dict()
         alignment = []
-        for i in range(len(words)):
-	        word_table[idx[i]] = words[i]
+        for i in range(min(len(words), len(idx))):
+            wt_idx = idx[i]
+            word_table[wt_idx] = words[i]
         offset = 0.0
-        for i in range(len(words)):
+        for i in range(min(len(words), len(idx))):
             offset += lats[i][0]
             alignment.append([word_table[lats[i][1]], offset - lats[i][0]])
 

@@ -1,16 +1,15 @@
-from multiprocessing import Process, Queue
 from lib.decoder import Decoder
 from lib.audio import Audio
 from lib.batch import Batch, BatchFull, ToDecode
-from threading import Condition, Event
-from queue import Empty
+from threading import Event, Thread
+from queue import Queue, Empty
 from typing import Tuple
 import os
 
 THRESHOLD = 1.5         # In seconds
 MAX_READY = 1000        # Max number of items in queue
 
-class TimedQueue(Process):
+class TimedQueue(Thread):
     def __init__(self, decoder: Decoder):
         super(TimedQueue, self).__init__()
         self.ready = Queue()
