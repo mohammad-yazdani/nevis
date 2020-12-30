@@ -90,33 +90,39 @@ def get_transcript():
     transcript = aspire_decoder.get_trans(batch_id, corpus_id)
     alignment, duration = aspire_decoder.get_alignment(batch_id, corpus_id)
     
-    # sentences = Sentence.segment(transcript)
-    # TODO : Because tensorflow is dumb, I'm gonna consider every 5 words a sentence
-    tokens = transcript.split()
     sentences = []
-    for index in range(len(tokens)):
-        sntsz = len(sentences)
-        if sntsz < (int(index / 5) + 1):
-            sentences.append([])
-        word = tokens[int(index)]
-        sentences[int(index / 5)].append(word)
+    use_LSTM = True
+    if use_LSTM:
+        sentences = Sentence.segment(transcript)
+    else:    
+        # TODO : Because tensorflow is dumb, I'm gonna consider every 5 words a sentence
+        tokens = transcript.split()
+        for index in range(len(tokens)):
+            sntsz = len(sentences)
+            if sntsz < (int(index / 5) + 1):
+                sentences.append([])
+            word = tokens[int(index)]
+            sentences[int(index / 5)].append(word)
 
     w_dim = 0
     aligned_sentences = list()
     for s in sentences:
-        # TODO : LSTM stuff
-        # sentence = s[0]
-        # punctuation = s[1]
-        sentence = s
+        punctuation = []
+        if use_LSTM:
+            sentence = s[0]
+            punctuation = s[1]
+        else:
+            sentence = s
 
         segment_idx = 0
         aligned_sentence = list()
         for segment_idx, _ in enumerate(sentence):
             word = sentence[segment_idx]
 
-            # TODO : LSTM stuff
-            # is_punctuation = punctuation[segment_idx] is not None
-            is_punctuation = False
+            if use_LSTM:
+                is_punctuation = punctuation[segment_idx] is not None
+            else:
+                is_punctuation = False
 
             # This is an important check, but for now we hack around
             timestamp = alignment[w_dim + segment_idx][1]
