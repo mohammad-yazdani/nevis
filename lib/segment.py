@@ -53,7 +53,8 @@ class Sentence(dict):
     @staticmethod
     def segment(transcript):
         # The default language is 'en'
-        segmenter = DeepSegment("en")
+        segmenter = DeepSegment("en", tf_serving=False)
+
         segments = segmenter.segment_long(transcript)
         # puncted_sequences = Sentence._punctuate(segments)
         # TODO : Quick fix hack
