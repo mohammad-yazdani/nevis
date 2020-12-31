@@ -45,32 +45,26 @@ class Decoder:
         if os.path.exists(self.result_dir):
             os.rmdir(self.result_dir)
 
-    def get_trans(self, batch_id: int = None, id: int = 0) -> List[str]:
-        if batch_id is None:
-            batch_id = self.last_run
-        trans_file = os.path.join(self.result_dir, str(batch_id), str(id), "trans")
+    def get_trans(self, batch_id: int, corpus_id: str, iter_id: int = 0) -> List[str]:
+        trans_file = os.path.join(self.result_dir, str(batch_id), str(iter_id), "trans_" + corpus_id)
         f = open(trans_file)
         transcript: str = f.read().split(" ", 1)[1]
         f.close()
         return transcript
 
     # TODO : This alignment logic needs a review
-    def get_alignment(self, batch_id: int = None, id: int = 0) -> Tuple[List[int], float]:
-        if batch_id is None:
-            batch_id = self.last_run
-
+    def get_alignment(self, batch_id: int, corpus_id: str, iter_id: int = 0) -> Tuple[List[int], float]:
         # batch_env = self.env
-        # prep_process = Popen(["/usr/bin/gzip", "-d", os.path.join(self.result_dir, str(batch_id), str(id), "lat_aligned.gz")], stdin=PIPE, env=batch_env)
-        prep_process = Popen(["/usr/bin/gzip", "-d", os.path.join(self.result_dir, str(batch_id), str(id), "lat_aligned.gz")], stdin=PIPE)
+        prep_process = Popen(["/usr/bin/gzip", "-d", os.path.join(self.result_dir, str(batch_id), str(iter_id), "lat_aligned.gz")], stdin=PIPE)
         stdout, stderr = prep_process.communicate()
         logging.debug(stdout)
         logging.debug(stderr)
 
-        ctm_file = os.path.join(self.result_dir, str(batch_id), str(id), "1.ctm")
+        ctm_file = os.path.join(self.result_dir, str(batch_id), str(iter_id), corpus_id + ".ctm")
         
-        lattice_align_command: List[str] = ""
+        lattice_align_command: str = ""
         lattice_align_command += "/opt/kaldi/src/latbin/lattice-align-words-lexicon --partial-word-label=4324 /workspace/models/aspire/data/lang_chain/phones/align_lexicon.int /workspace/models/aspire/final.mdl"
-        lattice_align_command += (" ark:" + os.path.join(self.result_dir, str(batch_id), str(id), "lat_aligned"))
+        lattice_align_command += (" ark:" + os.path.join(self.result_dir, str(batch_id), str(iter_id), "lat_aligned"))
         lattice_align_command += " ark:- | /opt/kaldi/src/latbin/lattice-1best ark:- ark:- | /opt/kaldi/src/latbin/nbest-to-ctm ark:- "
         lattice_align_command += ctm_file
         # prep_process = Popen(lattice_align_command, stdin=PIPE, env=batch_env)
@@ -79,12 +73,12 @@ class Decoder:
         logging.debug(stdout)
         logging.debug(stderr)
 
-        trans_file = os.path.join(self.result_dir, str(batch_id), str(id), "trans_int_combined")
+        trans_file = os.path.join(self.result_dir, str(batch_id), str(iter_id), "trans_int_combined")
         idxwords = open(trans_file).read()
         rawlats = open(ctm_file).readlines()
 
         lats = []
-        words = self.get_trans(batch_id, id).split()
+        words = self.get_trans(batch_id, corpus_id)
 
         idx = idxwords.split()
         parse_list = idx
