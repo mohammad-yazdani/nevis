@@ -1,15 +1,19 @@
 from lib.batch import ToDecode
 import os
+import codecs
 import subprocess
 from tools.file_io  import delete_if_exists
 from pydub.audio_segment import AudioSegment
+
+CORPUS_SZ = 16
 
 class Audio:
     epoch: int = 0
 
     @staticmethod
     def prepare(mp4_file: str, bit_rate: int) -> ToDecode:
-        wav_out = os.path.join(Audio.get_prefix(), "audio" + str(Audio.epoch) + ".wav")
+        corpus_id = codecs.encode(os.urandom(CORPUS_SZ), 'hex').decode()
+        wav_out = os.path.join(Audio.get_prefix(), corpus_id + ".wav")
         delete_if_exists(wav_out)
         Audio.epoch += 1
         ffmpeg_command = "ffmpeg -i " + mp4_file + " -vn -acodec pcm_s16le -ar " + str(bit_rate) + " -ac 2 " + wav_out        
@@ -18,7 +22,7 @@ class Audio:
         sound = AudioSegment.from_wav(wav_out)
         sound = sound.set_channels(1)
         sound.export(wav_out, format="wav")
-        return ToDecode(wav_out, Audio._media_duration(wav_out))
+        return ToDecode(wav_out, Audio._media_duration(wav_out), corpus_id)
 
     @staticmethod
     def get_prefix() -> str:

@@ -35,9 +35,12 @@ app = Flask(__name__)
 lru_policy = LRU(50)
 cache = TranscriptCache(lru_policy)
 
+# Load LSTM segmenter model
+lstm_segmenter = DeepSegment("en", tf_serving=False)
+
 # Loading Kaldi stuff
 start = time.time()
-aspire_decoder = Decoder("aspire", 8000)
+aspire_decoder = Decoder("aspire", 8000, lstm_segmenter)
 if not os.path.exists("/workspace/nvidia-examples/aspire/run_benchmark.sh"):
     aspire_decoder.initalize()
 # librispeech_decoder = Decoder("librispeech")
@@ -45,8 +48,8 @@ if not os.path.exists("/workspace/nvidia-examples/aspire/run_benchmark.sh"):
     # librispeech_decoder.initalize()
 print(time.time() - start, "\t|", "Kaldi loaded!")
 
+# Initalize transcription queue
 timedQueue = TimedQueue(aspire_decoder)
-segmenter = DeepSegment("en", tf_serving=False)
 
 
 def getargs() -> Tuple[str, str]:
@@ -58,7 +61,7 @@ def getargs() -> Tuple[str, str]:
     return args.cert, args.key
 
 
-def transcript_queue(input_filename) -> Tuple[int, int]:
+def transcript_queue(input_filename) -> Tuple[int, str]:
     bathc_id, corpus_id = timedQueue.accept(input_filename, aspire_decoder)
     return bathc_id, corpus_id
 
@@ -89,63 +92,11 @@ def transcribe_file():
 @app.route('/get_transcript', methods=['GET'])
 def get_transcript():
     batch_id = int(request.args.get("batch_id"))
-    corpus_id = int(request.args.get("corpus_id"))
-    
-    transcript = aspire_decoder.get_trans(batch_id, corpus_id)
-    alignment, duration = aspire_decoder.get_alignment(batch_id, corpus_id)
-    
-    sentences = []
-    use_LSTM = True
-    if use_LSTM:
-        sentences = segmenter.segment_long(transcript)
-    else:    
-        # TODO : Because tensorflow is dumb, I'm gonna consider every 5 words a sentence
-        tokens = transcript.split()
-        for index in range(len(tokens)):
-            sntsz = len(sentences)
-            if sntsz < (int(index / 5) + 1):
-                sentences.append([])
-            word = tokens[int(index)]
-            sentences[int(index / 5)].append(word)
-
-    w_dim = 0
-    aligned_sentences = list()
-    for s in sentences:
-        punctuation = []
-        if use_LSTM:
-            sentence = s[0]
-            punctuation = s[1]
-        else:
-            sentence = s
-
-        segment_idx = 0
-        aligned_sentence = list()
-        for segment_idx, _ in enumerate(sentence):
-            word = sentence[segment_idx]
-
-            if use_LSTM:
-                is_punctuation = punctuation[segment_idx] is not None
-            else:
-                is_punctuation = False
-
-            # This is an important check, but for now we hack around
-            timestamp = alignment[w_dim + segment_idx][1]
-
-            word_obj = Word(word, timestamp)
-            word_obj.add_tag("is_punctuated", is_punctuation)
-            aligned_sentence.append(word_obj)
-
-        sentence_obj = Sentence(aligned_sentence, 0)
-        aligned_sentences.append(sentence_obj)
-        w_dim += segment_idx  + 1
-
-    for idx, _ in enumerate(aligned_sentences):
-        if idx < (len(aligned_sentences) - 1):
-            aligned_sentences[idx].length = aligned_sentences[idx + 1].words[0].timestamp
-    aligned_sentences[(len(aligned_sentences) - 1)].length = duration
-    transcript_out = {"duration": duration, "length": len(alignment), "sentences": aligned_sentences}
-
-    return transcript_out
+    corpus_id = request.args.get("corpus_id")
+    if batch_id in timedQueue.output and corpus_id in timedQueue.output[batch_id]:
+        return timedQueue.output[batch_id][corpus_id]
+    else:
+        return {}
 
 # TODO : TEST
 # class User(db.Model):

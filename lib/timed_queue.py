@@ -3,10 +3,10 @@ from lib.audio import Audio
 from lib.batch import Batch, BatchFull, ToDecode
 from threading import Event, Thread
 from queue import Queue, Empty
-from typing import Tuple
+from typing import Tuple, Dict
 import os
 
-THRESHOLD = 1.5         # In seconds
+THRESHOLD = 20          # In seconds
 MAX_READY = 1000        # Max number of items in queue
 
 class TimedQueue(Thread):
@@ -16,7 +16,7 @@ class TimedQueue(Thread):
         self.exit_flag = Event()
         self.decoder = decoder
         self.batches = 0
-        self.corpuses = 0
+        self.output: Dict[int, Dict[str, object]] = {}
 
     def run(self) -> None:
         print(os.getpid(), "run")
@@ -24,18 +24,14 @@ class TimedQueue(Thread):
             self.make_batch()
 
     # TODO : Review the atomicity of these methods
-    def accept(self, media: str, decoder: Decoder) -> Tuple[int, int]:
+    def accept(self, media: str, decoder: Decoder) -> Tuple[int, str]:
         td: ToDecode = Audio.prepare(media, decoder.bit_rate)
-        td.corpus_id = self.corpuses
-        self.corpuses += 1
         td.batch_id = self.batches
         self.ready.put_nowait(td)
         return td.batch_id, td.corpus_id
 
     def make_batch(self) -> None:
-        batch = Batch(self.decoder, self.batches)
-        self.batches += 1
-
+        batch = Batch(self.decoder, self.batches, self.recieve)
         try:
             while True:
                 decoding = self.ready.get_nowait()
@@ -44,6 +40,13 @@ class TimedQueue(Thread):
             pass
         except BatchFull:
             pass
+        
+        if batch.is_empty():
+            return
 
+        self.batches += 1
         # Non-blocking
         batch.start()
+
+    def recieve(self, batch_id: int, batch_out: object) -> None:
+        self.output[batch_id] = batch_out
