@@ -1,79 +1,39 @@
-import hashlib
+from lib.batch import ToDecode
 import os
-import time
+import codecs
 import subprocess
-
-import wave
-from pydub import AudioSegment
-
 from tools.file_io  import delete_if_exists
-from tools.hash     import hash_file
+from pydub.audio_segment import AudioSegment
 
+CORPUS_SZ = 16
 
-# TODO : This is temporary. This is NOT a good way to compare audio files
-def get_frames(wav_file):
-    w = wave.open(wav_file, "r")
+class Audio:
+    epoch: int = 0
 
-    nframes = w.getnframes()
+    @staticmethod
+    def prepare(mp4_file: str, bit_rate: int) -> ToDecode:
+        corpus_id = codecs.encode(os.urandom(CORPUS_SZ), 'hex').decode()
+        wav_out = os.path.join(Audio.get_prefix(), corpus_id + ".wav")
+        delete_if_exists(wav_out)
+        Audio.epoch += 1
+        ffmpeg_command = "ffmpeg -i " + mp4_file + " -vn -acodec pcm_s16le -ar " + str(bit_rate) + " -ac 2 " + wav_out        
+        with open('/dev/null', "w") as outfile:
+            subprocess.run(ffmpeg_command, shell=True, stderr=outfile)
+        sound = AudioSegment.from_wav(wav_out)
+        sound = sound.set_channels(1)
+        sound.export(wav_out, format="wav")
+        return ToDecode(wav_out, Audio._media_duration(wav_out), corpus_id)
 
-    frames = w.readframes(nframes)
-    return frames
+    @staticmethod
+    def get_prefix() -> str:
+        return "/root/audio"
 
-# TODO : This is temporary. This is NOT a good way to compare audio files
-def compare_frames(wav1, wav2):
-    frames_one = hash_file(wav1)
-    frames_two = hash_file(wav2)
-
-    return frames_one == frames_two
-
-
-def get_hash(frames):
-    # perf = Perf(take_intervals=True)
-    result = hashlib.md5(frames)
-    return result.hexdigest()  # , perf.elapsed()
-
-
-def audio_hash(audio_file):
-    frames = get_frames(audio_file)
-    h = get_hash(frames)
-    return h
-
-
-def wav_from_mp4(mp4_file):
-    wav_out = mp4_file + ".wav"
-    delete_if_exists(wav_out)
-
-    ffmpeg_command = "ffmpeg -i " + mp4_file + " -vn -acodec pcm_s16le -ar 16000 -ac 2 " + wav_out
-    currtime = str(int(time.time()))
-    with open('/tmp/ffmpeg' + currtime + '.log', "w") as outfile:
-        subprocess.run(ffmpeg_command, shell=True, stderr=outfile)
-
-    return wav_out
-
-
-def stereo_to_mono(stereo_file):
-    mono_out = stereo_file + ".mono"
-    delete_if_exists(mono_out)
-
-    sound = AudioSegment.from_wav(stereo_file)
-    sound = sound.set_channels(1)
-    sound.export(mono_out, format="wav")
-
-    delete_if_exists(stereo_file)
-
-    return os.path.abspath(mono_out)
-
-
-# Code straight from https://stackoverflow.com/a/3844467
-def media_duration(filename):
-    result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
-                             "format=duration", "-of",
-                             "default=noprint_wrappers=1:nokey=1", filename],
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.STDOUT)
-    return float(result.stdout)
-
-
-def prepare_input(mp4_file):
-    stereo_wav = wav_from_mp4(mp4_file)
-    return stereo_to_mono(stereo_wav), media_duration(mp4_file)
+    # Code straight from https://stackoverflow.com/a/3844467
+    @staticmethod
+    def _media_duration(filename) -> float:
+        result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
+            "format=duration", "-of",
+            "default=noprint_wrappers=1:nokey=1", filename],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT)
+        return float(result.stdout)
