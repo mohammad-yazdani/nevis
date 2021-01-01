@@ -19,7 +19,7 @@ class TimedQueue(Thread):
         self.output: Dict[int, Dict[str, object]] = {}
 
     def run(self) -> None:
-        print(os.getpid(), "run")
+        print("TimedQueue", os.getpid(), "run")
         while not self.exit_flag.wait(timeout=THRESHOLD):
             self.make_batch()
 

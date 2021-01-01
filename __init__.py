@@ -1,30 +1,20 @@
-import shutil
-from typing import Tuple
-from lib.timed_queue import TimedQueue
-import os
 import argparse
-import json
+import glob
 import logging
-import sys
+import os
+import shutil
 import time
-# import ssl
-
-from werkzeug.utils import secure_filename
-from flask import (
-    Flask,
-    jsonify,
-    send_from_directory,
-    request,
-    make_response
-)
+from typing import Tuple
 
 from deepsegment import DeepSegment
+from flask import Flask, jsonify, make_response, request, send_from_directory
+from werkzeug.utils import secure_filename
+
 # from flask_sqlalchemy import SQLAlchemy
 from lib.caching.LRU import LRU
 from lib.caching.store import TranscriptCache
 from lib.decoder import Decoder
-from lib.segment import Sentence
-from lib.word import Word
+from lib.timed_queue import TimedQueue
 from tools.file_io import delete_if_exists
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
@@ -94,10 +84,21 @@ def transcribe_file():
 def get_transcript():
     batch_id = int(request.args.get("batch_id"))
     corpus_id = request.args.get("corpus_id")
+    fingerprint = None
+    if "fingerprint" in request.args:
+        fingerprint = request.args.get("fingerprint")
+    
     if batch_id in timedQueue.output and corpus_id in timedQueue.output[batch_id]:
-        return timedQueue.output[batch_id][corpus_id]
+        tobj = timedQueue.output[batch_id][corpus_id]
+        cache.add(fingerprint, tobj)
+        return tobj
     else:
         return {}
+
+@app.route('/cached_transcript', methods=['GET'])
+def cached_transcript():
+    corpus_fingerprint = request.args.get("fingerprint")
+    return cache.get(corpus_fingerprint)
 
 # TODO : TEST
 # class User(db.Model):
@@ -134,24 +135,8 @@ if __name__ == '__main__':
     past_data = "/tmp/results/aspire"
     if os.path.exists(past_data) and os.path.isdir(past_data):
         shutil.rmtree(past_data)
-    
-    if len(sys.argv) > 1:
-        model = None
-        for arg_idx in range(1, len(sys.argv)):
-            arg = sys.argv[arg_idx]
-            out = transcript_queue(sys.argv[1], model)
-            base = os.path.basename(arg)
-            sub_name = os.path.splitext(base)[0]
-            transcript_path = "/home/raynor106/speech/transcripts/" + sub_name
-            transcript_path += "_transcript_dump.json"
-            dump = open(transcript_path, "w")
-            print(json.dumps(out, indent=4), file=dump)
-            print(time.time() - start, "\t|", arg)
-            print(transcript_path)
-    else:
-        logging.getLogger().setLevel(logging.DEBUG)
-        # context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-        # context.load_cert_chain(
-        #     "/etc/letsencrypt/live/capstonecs1.ml/fullchain.pem",
-        #     "/etc/letsencrypt/live/capstonecs1.ml/privkey.pem")
-        app.run(host='0.0.0.0', port=8080, debug=False)
+    for file in glob.glob(r'/root/audio/batch*'):
+        print("Deleting ", file)
+        shutil.rmtree(file)
+    logging.getLogger().setLevel(logging.DEBUG)
+    app.run(host='0.0.0.0', port=8080, debug=False)
