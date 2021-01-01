@@ -1,3 +1,4 @@
+import shutil
 from typing import Tuple
 from lib.timed_queue import TimedQueue
 import os
@@ -130,6 +131,10 @@ def upload_file():
 if __name__ == '__main__':
     timedQueue.start()
 
+    past_data = "/tmp/results/aspire"
+    if os.path.exists(past_data) and os.path.isdir(past_data):
+        shutil.rmtree(past_data)
+    
     if len(sys.argv) > 1:
         model = None
         for arg_idx in range(1, len(sys.argv)):
