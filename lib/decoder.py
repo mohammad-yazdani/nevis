@@ -1,11 +1,13 @@
 from io import TextIOWrapper
 import json
+import shutil
 from subprocess import Popen, PIPE
 from typing import List, Tuple, Dict
 import os
 import logging
 
 from deepsegment.deepsegment import DeepSegment
+from numpy.core import numeric
 
 from lib.segment import Sentence
 from lib.word import Word
@@ -16,6 +18,7 @@ class Decoder:
         self.name = name
         self.bit_rate = bit_rate
         self.segmenter = segmenter
+        self.use_feedback = True
         
         self.env = os.environ.copy()
         self.env["ITERATIONS"] = str(iteration)
@@ -25,6 +28,7 @@ class Decoder:
         self.model_dir = os.path.join("/workspace/nvidia-examples/", name.lower())
         self.result_dir = os.path.join("/tmp/results/", name.lower())
         self.prep_command = "prepare_data.sh"
+        self.batch_feedback_command = "run_feedback.sh"
         self.batch_command = "run_benchmark.sh"
 
         self.last_run = None
@@ -137,10 +141,25 @@ class Decoder:
         # set environment, start new shell
         batch_env = self.env
         batch_env["DATASET"] = os.path.join("/root/audio/batch" + str(batch_id))
-        prep_process = Popen(["/bin/bash", self.batch_command], stdin=PIPE, stderr=PIPE, env=batch_env, cwd=self.model_dir)
-        stdout, stderr = prep_process.communicate()
-        logging.debug(stdout)
-        logging.debug(stderr)
+        
+        if self.use_feedback:
+            prep_process = Popen(["/bin/bash", self.batch_feedback_command], stdin=PIPE, stderr=PIPE, env=batch_env, cwd=self.model_dir)
+            stdout, stderr = prep_process.communicate()
+            logging.debug(stdout)
+            logging.debug(stderr)
+            num_lines = len(open(os.path.join("/tmp/results", self.name, str(batch_id), "0", "trans")).readlines())
+            if num_lines < 2:
+                self.use_feedback = False
+                shutil.rmtree(os.path.join("/tmp/results", self.name, str(batch_id)))
+                prep_process = Popen(["/bin/bash", self.batch_command], stdin=PIPE, stderr=PIPE, env=batch_env, cwd=self.model_dir)
+                stdout, stderr = prep_process.communicate()
+                logging.debug(stdout)
+                logging.debug(stderr)
+        else:
+            prep_process = Popen(["/bin/bash", self.batch_command], stdin=PIPE, stderr=PIPE, env=batch_env, cwd=self.model_dir)
+            stdout, stderr = prep_process.communicate()
+            logging.debug(stdout)
+            logging.debug(stderr)
 
         # batch_env = self.env
         prep_process = Popen(["/usr/bin/gzip", "-d", os.path.join(self.result_dir, str(batch_id), str(iter_id), "lat_aligned.gz")], stdin=PIPE)

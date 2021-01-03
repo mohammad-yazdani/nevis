@@ -1,6 +1,6 @@
 cd /opt/kaldi/egs/vystadial_en/s5/common
 
-# grep -oE "[A-Za-z\\-\\']{3,}" /tmp/results/aspire/0/0/trans_feedback | tr '[:lower:]' '[:upper:]' | sort | uniq > /opt/kaldi/egs/vystadial_en/s5/common/words.txt
+grep -oE "[A-Za-z\\-\\']{3,}" /tmp/results/aspire/0/0/trans | tr '[:lower:]' '[:upper:]' | sort | uniq > /opt/kaldi/egs/vystadial_en/s5/common/words.txt
 
 g2p.py --train cmudict.ext --devel 5% --write-model model-1
  

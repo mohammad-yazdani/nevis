@@ -4,6 +4,7 @@ import logging
 import os
 import shutil
 import time
+import json
 from typing import Tuple
 
 from deepsegment import DeepSegment
@@ -15,6 +16,7 @@ from lib.caching.LRU import LRU
 from lib.caching.store import TranscriptCache
 from lib.decoder import Decoder
 from lib.timed_queue import TimedQueue
+from lib.feedback.feedback import FeedbackAgent
 from tools.file_io import delete_if_exists
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
@@ -100,6 +102,19 @@ def cached_transcript():
     corpus_fingerprint = request.args.get("fingerprint")
     return cache.get(corpus_fingerprint)
 
+@app.route('/submit_feedback', methods=['POST'])
+def submit_feedback():
+    batch_id = int(request.args.get("batch_id"))
+    corpus_id = request.args.get("corpus_id")
+    if corpus_id is None:
+        corpus_id = ""
+    corrections = json.loads(request.data)["corrections"]
+    
+    fa = FeedbackAgent(batch_id, corpus_id, corrections)
+    aspire_decoder.use_feedback = True
+    fa.run()
+    return {}
+
 # TODO : TEST
 # class User(db.Model):
 #     __tablename__ = "users"
@@ -131,12 +146,13 @@ def upload_file():
 
 if __name__ == '__main__':
     timedQueue.start()
-
-    past_data = "/tmp/results/aspire"
-    if os.path.exists(past_data) and os.path.isdir(past_data):
-        shutil.rmtree(past_data)
-    for file in glob.glob(r'/root/audio/batch*'):
-        print("Deleting ", file)
-        shutil.rmtree(file)
+    clean = True
+    if clean:
+        past_data = "/tmp/results/aspire"
+        if os.path.exists(past_data) and os.path.isdir(past_data):
+            shutil.rmtree(past_data)
+        for file in glob.glob(r'/root/audio/batch*'):
+            print("Deleting ", file)
+            shutil.rmtree(file)
     logging.getLogger().setLevel(logging.DEBUG)
     app.run(host='0.0.0.0', port=8080, debug=False)
