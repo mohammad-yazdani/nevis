@@ -1,5 +1,6 @@
+from os import curdir
 from lib.caching.policy import Policy
-
+from lib.caching.fingerprint import is_similar
 
 class LRU(Policy):
 
@@ -8,12 +9,17 @@ class LRU(Policy):
         self.lr_list = dict()
         self.epoch = 0
 
-    def resolve(self, hash_key: str):
+    def resolve(self, fp_key: str):
         self.epoch += 1
-        in_cache = hash_key in self.lr_list
 
-        self.lr_list[hash_key] = self.epoch
-        return in_cache
+        # This is normal dictionary usage, but we are using fingerprints
+        # in_cache = hash_key in self.lr_list
+        curr_keys = self.lr_list.keys()
+        for key in curr_keys:
+            if is_similar(fp_key, key):
+                self.lr_list[key] = self.epoch
+                return True
+        return False
 
     def evict(self):
         if len(self.lr_list) <= 50:
