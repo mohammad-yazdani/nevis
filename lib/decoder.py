@@ -46,6 +46,11 @@ class Decoder:
             single_trans = open(os.path.join(self.result_dir, str(batch_id), str(iter_id), "trans_" + header), "w")
             single_trans.write(trans)
             single_trans.close()
+            
+            archived = open(os.path.join("/root/audio/batch" + str(batch_id), "tran_" + header + ".txt"), "w")
+            archived.write(trans)
+            archived.close()
+            
             transcript_repo[header] = trans.split()
         
         trans_int_file = open(os.path.join(self.result_dir, str(batch_id), str(iter_id), "trans_int_combined"))
@@ -91,7 +96,7 @@ class Decoder:
             if use_LSTM:
                 sentences = self.segmenter.segment_long(transcript)
             else:
-                # TODO : Because tensorflow is dumb, I'm gonna consider every 5 words a sentence
+                # Because tensorflow is prone to breaking without notice, I'm gonna consider every 5 words a sentence in case
                 tokens = transcript.split()
                 for index in range(len(tokens)):
                     sntsz = len(sentences)
