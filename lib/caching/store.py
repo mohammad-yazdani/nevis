@@ -1,5 +1,5 @@
 from lib.caching.policy import Policy
-from threading import Thread
+
 
 class TranscriptCache:
     def __init__(self, policy: Policy):
@@ -9,7 +9,7 @@ class TranscriptCache:
     def add(self, key: str, value: object) -> object:
         if key is None:
             return {}
-        
+
         self.cache[key] = value
 
         evicted = self.policy.evict()

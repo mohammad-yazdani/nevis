@@ -6,8 +6,9 @@ from queue import Queue, Empty
 from typing import Tuple, Dict
 import os
 
-THRESHOLD = 20          # In seconds
-MAX_READY = 1000        # Max number of items in queue
+THRESHOLD = 20  # In seconds
+MAX_READY = 1000  # Max number of items in queue
+
 
 class TimedQueue(Thread):
     def __init__(self, decoder: Decoder):
@@ -31,7 +32,7 @@ class TimedQueue(Thread):
         return td.batch_id, td.corpus_id
 
     def make_batch(self) -> None:
-        batch = Batch(self.decoder, self.batches, self.recieve)
+        batch = Batch(self.decoder, self.batches, self.receive)
         try:
             while True:
                 decoding = self.ready.get_nowait()
@@ -40,7 +41,7 @@ class TimedQueue(Thread):
             pass
         except BatchFull:
             pass
-        
+
         if batch.is_empty():
             return
 
@@ -48,5 +49,5 @@ class TimedQueue(Thread):
         # Non-blocking
         batch.start()
 
-    def recieve(self, batch_id: int, batch_out: object) -> None:
+    def receive(self, batch_id: int, batch_out: Dict[str, object]) -> None:
         self.output[batch_id] = batch_out

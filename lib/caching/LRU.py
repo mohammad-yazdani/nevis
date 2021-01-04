@@ -1,6 +1,6 @@
-from os import curdir
-from lib.caching.policy import Policy
 from lib.caching.fingerprint import is_similar
+from lib.caching.policy import Policy
+
 
 class LRU(Policy):
 

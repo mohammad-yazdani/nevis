@@ -145,8 +145,8 @@ def mediafiles(filename):
 @app.route("/upload", methods=["GET", "POST"])
 def upload_file():
     if request.method == "POST":
-        file = request.files["file"]
-        filename = secure_filename(file.filename)
+        input_file = request.files["file"]
+        filename = secure_filename(input_file.filename)
         file.save(os.path.join(app.config["MEDIA_FOLDER"], filename))
     return []
 # TODO : TEST

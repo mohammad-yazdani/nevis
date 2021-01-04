@@ -19,7 +19,7 @@ class BatchFull(Exception):
 @dataclass(order=True)
 class ToDecode:
 
-    def __init__(self, wav_path: str, duration: int, corpus_id: str, priority: int = 1) -> None:
+    def __init__(self, wav_path: str, duration: float, corpus_id: str, priority: int = 1) -> None:
         super().__init__()
         self.wav_path = wav_path
         self.duration = duration

@@ -2,10 +2,11 @@ from lib.batch import ToDecode
 import os
 import codecs
 import subprocess
-from tools.file_io  import delete_if_exists
+from tools.file_io import delete_if_exists
 from pydub.audio_segment import AudioSegment
 
 CORPUS_SZ = 16
+
 
 class Audio:
     epoch: int = 0
@@ -16,7 +17,7 @@ class Audio:
         wav_out = os.path.join(Audio.get_prefix(), corpus_id + ".wav")
         delete_if_exists(wav_out)
         Audio.epoch += 1
-        ffmpeg_command = "ffmpeg -i " + mp4_file + " -vn -acodec pcm_s16le -ar " + str(bit_rate) + " -ac 2 " + wav_out        
+        ffmpeg_command = "ffmpeg -i " + mp4_file + " -vn -acodec pcm_s16le -ar " + str(bit_rate) + " -ac 2 " + wav_out
         with open('/dev/null', "w") as outfile:
             subprocess.run(ffmpeg_command, shell=True, stderr=outfile)
         sound = AudioSegment.from_wav(wav_out)
@@ -32,8 +33,8 @@ class Audio:
     @staticmethod
     def _media_duration(filename) -> float:
         result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
-            "format=duration", "-of",
-            "default=noprint_wrappers=1:nokey=1", filename],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT)
+                                 "format=duration", "-of",
+                                 "default=noprint_wrappers=1:nokey=1", filename],
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.STDOUT)
         return float(result.stdout)
