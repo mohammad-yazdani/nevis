@@ -58,10 +58,12 @@ def transcript_queue(input_filename) -> Tuple[int, str]:
     bathc_id, corpus_id = timedQueue.accept(input_filename, aspire_decoder)
     return bathc_id, corpus_id
 
+
 @app.route('/')
 def run():
     app.logger.debug('inside /')
     return "call /transcribe"
+
 
 @app.route('/transcribe_file', methods=['POST'])
 def transcribe_file():
@@ -82,6 +84,7 @@ def transcribe_file():
         delete_if_exists("/tmp/transcribe.mp4")
         app.logger.debug("ERROR: " + str(error))
 
+
 @app.route('/get_transcript', methods=['GET'])
 def get_transcript():
     batch_id = int(request.args.get("batch_id"))
@@ -89,18 +92,20 @@ def get_transcript():
     fingerprint = None
     if "fingerprint" in request.args:
         fingerprint = request.args.get("fingerprint")
-    
+
     if batch_id in timedQueue.output and corpus_id in timedQueue.output[batch_id]:
         tobj = timedQueue.output[batch_id][corpus_id]
         cache.add(fingerprint, tobj)
         return tobj
     else:
-        return {}
+        return {"complete": "0"}
+
 
 @app.route('/cached_transcript', methods=['GET'])
 def cached_transcript():
     corpus_fingerprint = request.args.get("fingerprint")
     return cache.get(corpus_fingerprint)
+
 
 @app.route('/submit_feedback', methods=['POST'])
 def submit_feedback():
@@ -109,7 +114,7 @@ def submit_feedback():
     if corpus_id is None:
         corpus_id = ""
     corrections = json.loads(request.data)["corrections"]
-    
+
     fa = FeedbackAgent(batch_id, corpus_id, corrections)
     aspire_decoder.use_feedback = True
     fa.run()
@@ -126,13 +131,16 @@ def submit_feedback():
 #     def __init__(self, email):
 #         self.email = email
 
+
 @app.route("/static/<path:filename>")
 def staticfiles(filename):
     return send_from_directory(app.config["STATIC_FOLDER"], filename)
 
+
 @app.route("/media/<path:filename>")
 def mediafiles(filename):
     return send_from_directory(app.config["MEDIA_FOLDER"], filename)
+
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload_file():
