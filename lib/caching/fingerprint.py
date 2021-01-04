@@ -30,7 +30,7 @@ def compare_fp(fp0: str, fp1: str) -> Tuple[float, float]:
 
 def is_similar(fp0, fp1) -> bool:
     minn, avg = compare_fp(fp0, fp1)
-    return (minn >= HARD_MIN and avg >= SIM_THRESHOLD)
+    return minn >= HARD_MIN and avg >= SIM_THRESHOLD
 
 
 if __name__ == "__main__":

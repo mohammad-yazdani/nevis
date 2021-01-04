@@ -22,7 +22,7 @@ class Segmenter:
     def _extract_words(segment, punctuated):
         raw_words = str(segment).split()
         puncted_words = punctuated.split()
-        
+
         # TODO : Dummy punctuation
         first_word = puncted_words[0]
         first_char = (first_word[0]).upper()
@@ -62,13 +62,13 @@ class Segmenter:
         segments = self.segmenter.segment_long(transcript)
         # puncted_sequences = Sentence._punctuate(segments)
         # TODO : Quick fix hack
-        puncted_sequences = segments 
+        puncted_sequences = segments
         sentences = list()
         # Parallel
         for idx in range(len(segments)):
             seq = puncted_sequences[idx]
             seg = segments[idx]
-            words = Sentence._extract_words(seg, seq)
+            words = Segmenter._extract_words(seg, seq)
             sentences.append(words)
 
         return sentences
