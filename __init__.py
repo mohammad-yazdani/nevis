@@ -55,8 +55,8 @@ def getargs() -> Tuple[str, str]:
 
 
 def transcript_queue(input_filename) -> Tuple[int, str]:
-    bathc_id, corpus_id = timedQueue.accept(input_filename, aspire_decoder)
-    return bathc_id, corpus_id
+    batch_id, batch_offset, corpus_id = timedQueue.accept(input_filename, aspire_decoder)
+    return batch_id, batch_offset, corpus_id
 
 
 @app.route('/')
@@ -75,14 +75,17 @@ def transcribe_file():
         mp4.write(mp4_byte_buffer)
         mp4.close()
         app.logger.debug("Read MP4.")
-        batch_id, corpus_id = transcript_queue(input_filename)
+        batch_id, batch_offset, corpus_id = transcript_queue(input_filename)
         return make_response(jsonify({
             "batch_id": batch_id,
-            "corpus_id": corpus_id
+            "batch_offset": batch_offset,
+            "corpus_id": corpus_id,
+            "queue": timedQueue.active
         }), 200)
     except Exception as error:
         delete_if_exists("/tmp/transcribe.mp4")
         app.logger.debug("ERROR: " + str(error))
+        print(error.with_traceback())
 
 
 @app.route('/get_transcript', methods=['GET'])
@@ -98,7 +101,10 @@ def get_transcript():
         cache.add(fingerprint, tobj)
         return tobj
     else:
-        return {"complete": "0"}
+        return {
+            "complete": "0",
+            "queue": timedQueue.active
+        }
 
 
 @app.route('/cached_transcript', methods=['GET'])

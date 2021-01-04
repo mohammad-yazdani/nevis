@@ -8,7 +8,7 @@ from tools.file_io import delete_if_exists
 
 from lib.decoder import Decoder
 
-MAX_BATCH_SIZE = 10     # Max number of Decodings in a batch
+MAX_BATCH_SIZE = 100     # Max number of Decodings in a batch
 
 
 class BatchFull(Exception):
@@ -27,6 +27,7 @@ class ToDecode:
         self.basename = str(os.path.basename(wav_path))
         self.corpus_id = corpus_id
         self.batch_id = None
+        self.batch_offset = None
 
 
 class Batch(Thread):
@@ -59,4 +60,4 @@ class Batch(Thread):
                     "/root/audio/batch" + str(self.batch_id), d.basename + ".wav")
                 shutil.move(d.wav_path, wav_path)
             batch_out = self.decoder.decode_batch(self.batch_id)
-            self.recv(self.batch_id, batch_out)
+            self.recv(self.batch_id, batch_out, len(self.batch))
