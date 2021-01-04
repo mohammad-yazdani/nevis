@@ -8,8 +8,6 @@ from tools.file_io import delete_if_exists
 
 from lib.decoder import Decoder
 
-MAX_BATCH_SIZE = 100     # Max number of Decodings in a batch
-
 
 class BatchFull(Exception):
     def __init__(self, *args: object) -> None:
@@ -26,22 +24,21 @@ class ToDecode:
         self.priority = priority
         self.basename = str(os.path.basename(wav_path))
         self.corpus_id = corpus_id
-        self.batch_id = None
-        self.batch_offset = None
 
 
 class Batch(Thread):
     batch_idx: int = 0
 
-    def __init__(self, decoder: Decoder, batch_id: int, reciever) -> None:
+    def __init__(self, decoder: Decoder, batch_id: int, reciever, max_batch_size) -> None:
         super(Batch, self).__init__()
         self.batch_id = batch_id
         self.batch: List[ToDecode] = []
         self.decoder = decoder
         self.recv = reciever
+        self.max_batch_size = max_batch_size
 
     def add(self, td: ToDecode) -> None:
-        if len(self.batch) == MAX_BATCH_SIZE:
+        if len(self.batch) == self.max_batch_size:
             raise BatchFull
         else:
             self.batch.append(td)
@@ -60,4 +57,5 @@ class Batch(Thread):
                     "/root/audio/batch" + str(self.batch_id), d.basename + ".wav")
                 shutil.move(d.wav_path, wav_path)
             batch_out = self.decoder.decode_batch(self.batch_id)
-            self.recv(self.batch_id, batch_out, len(self.batch))
+            for key in batch_out.keys():
+                self.recv(key, batch_out[key])
