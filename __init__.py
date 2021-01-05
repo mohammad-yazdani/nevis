@@ -25,7 +25,7 @@ app = Flask(__name__)
 # app.config.from_object("project.config.Config")
 # db = SQLAlchemy(app) TODO
 
-lru_policy = LRU(50)
+lru_policy = LRU(1000)
 cache = TranscriptCache(lru_policy)
 
 # Load LSTM segmenter model
@@ -88,6 +88,9 @@ def get_transcript():
     fingerprint = None
     if "fingerprint" in request.args:
         fingerprint = request.args.get("fingerprint")
+        cached = cache.get(fingerprint)
+        if cached != {}:
+            return cached
 
     if corpus_id in timedQueue.output:
         tobj = timedQueue.output[corpus_id]
@@ -95,7 +98,9 @@ def get_transcript():
         return tobj
     elif corpus_id in timedQueue.corpus_map:
         try:
-            return Decoder.fetch_transcript(timedQueue.get_corpus_batch(corpus_id), corpus_id)
+            tobj =  Decoder.fetch_transcript(timedQueue.get_corpus_batch(corpus_id), corpus_id)
+            cache.add(fingerprint, tobj)
+            return tobj
         except Exception as error:
             app.logger.debug("ERROR: " + str(error))
     
@@ -107,8 +112,14 @@ def get_transcript():
 
 @app.route('/cached_transcript', methods=['GET'])
 def cached_transcript():
-    corpus_fingerprint = request.args.get("fingerprint")
-    return cache.get(corpus_fingerprint)
+    if "fingerprint" in request.args:
+        fingerprint = request.args.get("fingerprint")
+        cached = cache.get(fingerprint)
+        if cached != {}:
+            return cached
+    return {
+        "complete": "0"
+    }
 
 
 @app.route('/submit_feedback', methods=['POST'])
@@ -119,7 +130,7 @@ def submit_feedback():
     corrections = json.loads(request.data)["corrections"]
     # Get batch id
     fa = FeedbackAgent(timedQueue.get_corpus_batch(corpus_id), corpus_id, corrections)
-    aspire_decoder.use_feedback = True
+    aspire_decoder.use_feedback = False # TODO : Change to true
     fa.run()
     return {}
 

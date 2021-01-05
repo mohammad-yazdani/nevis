@@ -8,7 +8,7 @@ import os
 
 THRESHOLD = 20          # In seconds
 MAX_READY = 1000        # Max number of items in queue
-MAX_BATCH_SIZE = 5      # Max number of Decodings in a batch
+MAX_BATCH_SIZE = 10     # Max number of Decodings in a batch
 
 class TimedQueue(Thread):
     def __init__(self, decoder: Decoder):
@@ -26,16 +26,17 @@ class TimedQueue(Thread):
         print("TimedQueue", os.getpid(), "run")
         while not self.exit_flag.wait(timeout=THRESHOLD):
             self.make_batch()
+        print("TimedQueue", os.getpid(), "terminated")
 
     # TODO : Review the atomicity of these methods
     def accept(self, media: bytes, decoder: Decoder) -> str:
         td: ToDecode = Audio.prepare(media, decoder.bit_rate)
-        self.ready.put(td)
+        self.ready.put_nowait(td)
         self.active += 1
         return td.corpus_id
 
     def make_batch(self) -> None:
-        self.queue_lk.acquire(blocking=True)
+        # self.queue_lk.acquire(blocking=True)
         batch = Batch(self.decoder, self.batches, self.recieve, MAX_BATCH_SIZE)
         try:
             for _ in range(MAX_BATCH_SIZE):
@@ -49,7 +50,7 @@ class TimedQueue(Thread):
             return
 
         self.batches += 1
-        self.queue_lk.release()
+        # self.queue_lk.release()
 
         # Non-blocking
         batch.start()

@@ -21,7 +21,10 @@ class LRU(Policy):
                 return True
         return False
 
-    def evict(self):
+    def evict(self, key):
+        self.epoch += 1
+        self.lr_list[key] = self.epoch
+
         if len(self.lr_list) <= 50:
             return None
         last = self.epoch
