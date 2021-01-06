@@ -1,10 +1,13 @@
-from json import JSONDecodeError
-from multiprocessing import Process
-# from threading import Thread
-import requests
 import os
 import time
+from json import JSONDecodeError
+from multiprocessing import Process
 from random import SystemRandom
+import json
+
+import acoustid
+import chromaprint
+import requests
 
 MEDIA_FILES = [
     "/mnt/NVSTORE/corpora/raw_audio/17_The_Peloponnesian_War_Part_I.wav",
@@ -21,20 +24,53 @@ MEDIA_FILES = [
     "/mnt/NVSTORE/corpora/raw_audio/rec05.wav"
 ]
 
+CACHE_TEST = [
+    "/mnt/NVSTORE/corpora/raw_audio/The_LG_Wing_is_Like_No_Other_Smartphone.wav",
+    "/mnt/NVSTORE/corpora/raw_audio/The_W12_Engine_-_The_Science_EXPLAINED.wav",
+    "/mnt/NVSTORE/corpora/raw_audio/rec05.wav"
+]
+
+WORDS = [
+    "Shazam", "builds", "fingerprint", "catalog", "hash", "table", "frequency", "spectrogram",
+    "rather", "intensity", "anchor"
+]
+
 rand = SystemRandom()
+
+model_quality = []
 
 
 class TranscribeClient(Process):
-    def __init__(self, media_path: str, client_id=-1):
+    def __init__(self, media_path: str, client_id=-1, use_cache: bool = True):
         super(TranscribeClient, self).__init__()
         self.media_path = media_path
+        self.fp = fingerprint(media_path)
         self.corpus_id = None
         self.client_id = client_id
+        self.corpus = None
+        self.use_cache = use_cache
 
-    def transcribe_file(self):
+    def transcribe_file(self) -> None:
+        if self.use_cache:
+            cached_url = "http://localhost:8080/cached_transcript"
+            params = {
+                "fingerprint": self.fp
+            }
+            r = requests.get(cached_url, params=params)
+            try:
+                comeback = r.json()
+                c = int(comeback["complete"])
+                if c == 1:
+                    self.corpus = comeback
+                    print("client id", self.client_id, "transcribed from cache")
+                    return
+            except JSONDecodeError:
+                pass
+
         url = "http://localhost:8080/transcribe_file"
         with open(self.media_path, 'rb') as f:
-            r = requests.post(url, data=f)
+            params = {}
+            r = requests.post(url, params=params, data=f)
             try:
                 comeback = r.json()
             except JSONDecodeError:
@@ -43,28 +79,50 @@ class TranscribeClient(Process):
             self.corpus_id = comeback["corpus_id"]
             print("client id", self.client_id, "queue", comeback["queue"], "|\t", self.corpus_id)
 
-    def poll_transcript(self):
+    def poll_transcript(self) -> None:
+        if self.corpus is not None:
+            return
+
         url = "http://localhost:8080/get_transcript"
         params = {
             "corpus_id": self.corpus_id
         }
+        if self.use_cache:
+            params["fingerprint"] = self.fp
         r = requests.get(url, params=params)
         comeback = r.json()
         c = int(comeback["complete"])
-        queue = comeback["queue"]
         while c != 1:
             time.sleep(5)
             r = requests.get(url, params=params)
             comeback = r.json()
-            if "queue" in comeback:
-                queue = comeback["queue"]
             c = int(comeback["complete"])
-        print(self.client_id, "Completed.")
+        self.corpus = comeback
+        print(self.client_id, "Completed,", "quality:", comeback["quality"])
+        model_quality.append(comeback["quality"])
+
+    def send_feedback(self):
+        params = {
+            "corpus_id": self.corpus_id
+        }
+        url = "http://localhost:8080/submit_feedback"
+        max_words_to_submit = 10
+        words_to_submit = rand.randrange(0, max_words_to_submit)
+        words_to_submit = WORDS[words_to_submit:]
+        r = requests.post(url, params=params, data=json.dumps({
+            "corrections": words_to_submit
+        }))
+        try:
+            r.json()
+        except JSONDecodeError:
+            pass
+        print("client id", self.client_id, "retraining")
 
     def run(self) -> None:
         print("Starting: ", self.client_id)
         self.transcribe_file()
         self.poll_transcript()
+        self.send_feedback()
 
 
 def up_sample_dataset(out_sz: int, dataset: list) -> list:
@@ -77,33 +135,33 @@ def up_sample_dataset(out_sz: int, dataset: list) -> list:
     return sample
 
 
+def fingerprint(path: str, length: int = 120, raw: bool = False) -> str:
+    duration, fp = acoustid.fingerprint_file(path, length)
+    if raw:
+        raw_fp = chromaprint.decode_fingerprint(fp)[0]
+        fp = ','.join(map(str, raw_fp))
+    return fp
+
+
 if __name__ == '__main__':
     start = time.time()
     print("CUDA batched-decoder benchmark:")
+    data_sizes = [10, 20, 50]
 
-    # data_sizes = [1, 5, 10, 15, 20, 25, 50]
-    data_sizes = [20, 25, 50]
-
-    batch_size = 20
-    bench_path = "benchmark_batch_" + str(batch_size) + ".txt"
+    bench_path = "benchmark_cache.txt"
     if os.path.exists(bench_path):
         os.remove(bench_path)
 
-    batches = {}
-    for ds in data_sizes:
-        fd = open("benchmark_data_" + str(ds) + ".txt", "r")
-        batches[str(ds)] = fd.readlines()
-
     for data_size in data_sizes:
         benchmark_log = open(bench_path, "a")
-        batch = batches[str(data_size)]
+        batch = up_sample_dataset(data_size, MEDIA_FILES)
         for media in batch:
-            media = media[:len(media) - 1]
+            # media = media[:len(media) - 1]
             if not os.path.exists(media):
                 raise Exception("Benchmark file missing: " + media)
         bench_workers = []
         for idx, media in enumerate(batch):
-            media = media[:len(media) - 1]
+            # media = media[:len(media) - 1]
             bench_workers.append(TranscribeClient(media, idx))
 
         for worker in bench_workers:
@@ -115,3 +173,5 @@ if __name__ == '__main__':
         print("time spent: " + time_spent)
         benchmark_log.write("data size: " + str(data_size) + ", time spent: " + time_spent + "\n")
         benchmark_log.close()
+
+    print(model_quality)
