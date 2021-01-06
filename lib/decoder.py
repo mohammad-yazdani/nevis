@@ -38,6 +38,8 @@ class Decoder:
         # Decoding lock
         self.batch_lk = Lock()
 
+        self.model_trainings = 0
+
     def initalize(self) -> None:
         prep_process = Popen(["/bin/bash", self.prep_command],
                              stdin=PIPE, stderr=PIPE, cwd=self.model_dir)
@@ -233,6 +235,9 @@ class Decoder:
     def clear_results(self) -> None:
         if os.path.exists(self.result_dir):
             os.rmdir(self.result_dir)
+
+    def feedback(self) -> None:
+        self.model_trainings += 1
 
     @staticmethod
     def calculate_alignment(words: List[str], idx: List[int], lats: List[List]) -> Tuple[List, float]:

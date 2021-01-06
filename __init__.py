@@ -94,11 +94,13 @@ def get_transcript():
 
     if corpus_id in timedQueue.output:
         tobj = timedQueue.output[corpus_id]
+        tobj["quality"] = aspire_decoder.model_trainings
         cache.add(fingerprint, tobj)
         return tobj
     elif corpus_id in timedQueue.corpus_map:
         try:
             tobj =  Decoder.fetch_transcript(timedQueue.get_corpus_batch(corpus_id), corpus_id)
+            tobj["quality"] = aspire_decoder.model_trainings
             cache.add(fingerprint, tobj)
             return tobj
         except Exception as error:
@@ -129,7 +131,7 @@ def submit_feedback():
         corpus_id = ""
     corrections = json.loads(request.data)["corrections"]
     # Get batch id
-    fa = FeedbackAgent(timedQueue.get_corpus_batch(corpus_id), corpus_id, corrections)
+    fa = FeedbackAgent(timedQueue.get_corpus_batch(corpus_id), corpus_id, corrections, aspire_decoder.feedback)
     aspire_decoder.use_feedback = False # TODO : Change to true
     fa.run()
     return {}

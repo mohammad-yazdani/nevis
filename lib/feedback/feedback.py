@@ -11,10 +11,11 @@ RETRAIN_SCRIPT = "./lib/feedback/retrain.sh"
 
 class FeedbackAgent(Thread):
 
-    def __init__(self, batch_id: int, corpus_id: str, corrections: List[str]):
+    def __init__(self, batch_id: int, corpus_id: str, corrections: List[str], callback):
         super(FeedbackAgent, self).__init__()
         self.batch_id = batch_id
         self.corpus_id = corpus_id
+        self.callback = callback
 
         if corpus_id != "":
             corpus_id = "_" + corpus_id
@@ -36,5 +37,6 @@ class FeedbackAgent(Thread):
         try:
             shell = Shell()
             shell.shell_execute(RETRAIN_SCRIPT)
+            self.callback()
         except ShellFail as sf:
             sf.why()
