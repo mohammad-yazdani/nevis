@@ -1,0 +1,3 @@
+data size: 20, time spent: 448.64645981788635
+data size: 25, time spent: 998.3135569095612
+data size: 50, time spent: 1289.8606870174408

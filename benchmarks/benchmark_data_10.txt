@@ -1,0 +1,10 @@
+/mnt/NVSTORE/corpora/raw_audio/Matrix_vector_products__Vectors_and_spaces__Linear_Algebra__Khan_Academy.wav
+/mnt/NVSTORE/corpora/raw_audio/rec05.wav
+/mnt/NVSTORE/corpora/raw_audio/30_Activation_Functions_Softmax_Activation_Detail_Explanation.wav
+/mnt/NVSTORE/corpora/raw_audio/30_Activation_Functions_Softmax_Activation_Detail_Explanation.wav
+/mnt/NVSTORE/corpora/raw_audio/DODGE_HEMI_-_Everything_You_Need_To_Know__Up_To_Speed.wav
+/mnt/NVSTORE/corpora/raw_audio/Matrix_vector_products__Vectors_and_spaces__Linear_Algebra__Khan_Academy.wav
+/mnt/NVSTORE/corpora/raw_audio/How_Many_Holes_Does_a_Human_Have.wav
+/mnt/NVSTORE/corpora/raw_audio/rec05.wav
+/mnt/NVSTORE/corpora/raw_audio/Aalto_Talk_with_Linus_Torvalds.wav
+/mnt/NVSTORE/corpora/raw_audio/17_The_Peloponnesian_War_Part_I.wav
