@@ -14,8 +14,8 @@ from lib.word import Word
 
 
 class Decoder:
-    def __init__(self, name: str, bit_rate: int, segmenter: DeepSegment, iteration: int = 1, max_active: int = 20000,
-                 max_batch_size=100) -> None:
+    def __init__(self, name: str, bit_rate: int, segmenter: DeepSegment, iteration: int = 1, max_active: int = 5000,
+                 max_batch_size=50) -> None:
         super().__init__()
         self.name = name
         self.bit_rate = bit_rate
@@ -37,6 +37,8 @@ class Decoder:
         self.last_run = None
         # Decoding lock
         self.batch_lk = Lock()
+
+        self.model_trainings = 0
 
     def initalize(self) -> None:
         prep_process = Popen(["/bin/bash", self.prep_command],
@@ -230,6 +232,13 @@ class Decoder:
         self.batch_lk.release()
         return corpora
 
+    def clear_results(self) -> None:
+        if os.path.exists(self.result_dir):
+            os.rmdir(self.result_dir)
+
+    def feedback(self) -> None:
+        self.model_trainings += 1
+
     @staticmethod
     def calculate_alignment(words: List[str], idx: List[int], lats: List[List]) -> Tuple[List, float]:
         word_table: Dict[int, str] = dict()
@@ -264,6 +273,8 @@ class Decoder:
             alignment.append([w, align])
         return alignment, offset
 
-    def clear_results(self) -> None:
-        if os.path.exists(self.result_dir):
-            os.rmdir(self.result_dir)
+    @staticmethod
+    def fetch_transcript(batch_id: int, corpus_id: str) -> object:
+        out_json = open(os.path.join("/root/audio/batch" + str(batch_id), corpus_id + ".json"), "r")
+        out_json = json.load(out_json)
+        return out_json

@@ -25,7 +25,7 @@ app = Flask(__name__)
 # app.config.from_object("project.config.Config")
 # db = SQLAlchemy(app) TODO
 
-lru_policy = LRU(50)
+lru_policy = LRU(1000)
 cache = TranscriptCache(lru_policy)
 
 # Load LSTM segmenter model
@@ -54,9 +54,9 @@ def getargs() -> Tuple[str, str]:
     return args.cert, args.key
 
 
-def transcript_queue(input_filename) -> Tuple[int, str]:
-    bathc_id, corpus_id = timedQueue.accept(input_filename, aspire_decoder)
-    return bathc_id, corpus_id
+def transcript_queue(media_buffer: bytes) -> str:
+    corpus_id = timedQueue.accept(media_buffer, aspire_decoder)
+    return corpus_id
 
 
 @app.route('/')
@@ -69,54 +69,70 @@ def run():
 def transcribe_file():
     app.logger.debug('Request is of type' + request.method)
     try:
-        input_filename = "/tmp/transcribe.mp4"
-        mp4_byte_buffer = request.data
-        mp4 = open(input_filename, "wb")
-        mp4.write(mp4_byte_buffer)
-        mp4.close()
-        app.logger.debug("Read MP4.")
-        batch_id, corpus_id = transcript_queue(input_filename)
+        media_byte_buffer = request.data
+        app.logger.debug("Read media.")
+        corpus_id = transcript_queue(media_byte_buffer)
         return make_response(jsonify({
-            "batch_id": batch_id,
-            "corpus_id": corpus_id
+            "corpus_id": corpus_id,
+            "queue": timedQueue.active
         }), 200)
     except Exception as error:
         delete_if_exists("/tmp/transcribe.mp4")
         app.logger.debug("ERROR: " + str(error))
+        raise error
 
 
 @app.route('/get_transcript', methods=['GET'])
 def get_transcript():
-    batch_id = int(request.args.get("batch_id"))
     corpus_id = request.args.get("corpus_id")
     fingerprint = None
     if "fingerprint" in request.args:
         fingerprint = request.args.get("fingerprint")
+        cached = cache.get(fingerprint)
+        if cached != {}:
+            return cached
 
-    if batch_id in timedQueue.output and corpus_id in timedQueue.output[batch_id]:
-        tobj = timedQueue.output[batch_id][corpus_id]
+    if corpus_id in timedQueue.output:
+        tobj = timedQueue.output[corpus_id]
+        tobj["quality"] = aspire_decoder.model_trainings
         cache.add(fingerprint, tobj)
         return tobj
-    else:
-        return {"complete": "0"}
+    elif corpus_id in timedQueue.corpus_map:
+        try:
+            tobj =  Decoder.fetch_transcript(timedQueue.get_corpus_batch(corpus_id), corpus_id)
+            tobj["quality"] = aspire_decoder.model_trainings
+            cache.add(fingerprint, tobj)
+            return tobj
+        except Exception as error:
+            app.logger.debug("ERROR: " + str(error))
+    
+    return {
+        "complete": "0",
+        "queue": timedQueue.active
+    }
 
 
 @app.route('/cached_transcript', methods=['GET'])
 def cached_transcript():
-    corpus_fingerprint = request.args.get("fingerprint")
-    return cache.get(corpus_fingerprint)
+    if "fingerprint" in request.args:
+        fingerprint = request.args.get("fingerprint")
+        cached = cache.get(fingerprint)
+        if cached != {}:
+            return cached
+    return {
+        "complete": "0"
+    }
 
 
 @app.route('/submit_feedback', methods=['POST'])
 def submit_feedback():
-    batch_id = int(request.args.get("batch_id"))
     corpus_id = request.args.get("corpus_id")
     if corpus_id is None:
         corpus_id = ""
     corrections = json.loads(request.data)["corrections"]
-
-    fa = FeedbackAgent(batch_id, corpus_id, corrections)
-    aspire_decoder.use_feedback = True
+    # Get batch id
+    fa = FeedbackAgent(timedQueue.get_corpus_batch(corpus_id), corpus_id, corrections, aspire_decoder.feedback)
+    aspire_decoder.use_feedback = False # TODO : Change to true
     fa.run()
     return {}
 

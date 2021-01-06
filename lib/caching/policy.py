@@ -11,5 +11,7 @@ class Policy(ABC):
         pass
 
     @abstractmethod
-    def evict(self):
+
+    @abstractmethod
+    def evict(self, key):
         pass
