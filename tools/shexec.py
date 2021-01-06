@@ -15,8 +15,10 @@ class ShellFail(Exception):
 
 class Shell:
 
-    def __init__(self, cwd: str = ".", env: dict = {}) -> None:
+    def __init__(self, cwd: str = ".", env=None) -> None:
         super().__init__()
+        if env is None:
+            env = {}
         self.cwd = cwd
         self.env = env
         self.env.update(os.environ)
