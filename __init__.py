@@ -94,11 +94,13 @@ def get_transcript():
 
     if corpus_id in timedQueue.output:
         tobj = timedQueue.output[corpus_id]
+        tobj["quality"] = aspire_decoder.model_trainings
         cache.add(fingerprint, tobj)
         return tobj
     elif corpus_id in timedQueue.corpus_map:
         try:
             tobj =  Decoder.fetch_transcript(timedQueue.get_corpus_batch(corpus_id), corpus_id)
+            tobj["quality"] = aspire_decoder.model_trainings
             cache.add(fingerprint, tobj)
             return tobj
         except Exception as error:
@@ -148,15 +150,7 @@ def feedback_iterations():
 #     active = db.Column(db.Boolean(), default=True, nullable=False)
 
 #     def __init__(self, email):
-#         self.email = email
-
-
-@app.route("/static/<path:filename>")
-def staticfiles(filename):
-    return send_from_directory(app.config["STATIC_FOLDER"], filename)
-
-
-@app.route("/media/<path:filename>")
+#         self.email = email./lib/feedback/__pycache__
 def mediafiles(filename):
     return send_from_directory(app.config["MEDIA_FOLDER"], filename)
 

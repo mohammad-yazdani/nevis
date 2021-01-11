@@ -11,7 +11,7 @@ RETRAIN_SCRIPT = "./lib/feedback/retrain.sh"
 
 class FeedbackAgent(Thread):
 
-    def __init__(self, batch_id: int, corpus_id: str, corrections: List[str]):
+    def __init__(self, batch_id: int, corpus_id: str, corrections: List[str], callback):
         super(FeedbackAgent, self).__init__()
         self.batch_id = batch_id
         self.corpus_id = corpus_id

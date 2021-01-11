@@ -1,0 +1,5 @@
+/mnt/NVSTORE/corpora/raw_audio/27_Vibration_of_Continuous_Structures_Strings_Beams_Rods_etc.wav
+/mnt/NVSTORE/corpora/raw_audio/The_LG_Wing_is_Like_No_Other_Smartphone.wav
+/mnt/NVSTORE/corpora/raw_audio/DODGE_HEMI_-_Everything_You_Need_To_Know__Up_To_Speed.wav
+/mnt/NVSTORE/corpora/raw_audio/The_LG_Wing_is_Like_No_Other_Smartphone.wav
+/mnt/NVSTORE/corpora/raw_audio/27_Vibration_of_Continuous_Structures_Strings_Beams_Rods_etc.wav
