@@ -130,9 +130,14 @@ def submit_feedback():
     corrections = json.loads(request.data)["corrections"]
     # Get batch id
     fa = FeedbackAgent(timedQueue.get_corpus_batch(corpus_id), corpus_id, corrections)
-    aspire_decoder.use_feedback = False # TODO : Change to true
-    fa.run()
+    aspire_decoder.train_model(fa)
     return {}
+
+@app.route('/feedback_iterations', methods=['GET'])
+def feedback_iterations():
+    return {
+        "iter": aspire_decoder.model_trainings
+    }
 
 # TODO : TEST
 # class User(db.Model):
