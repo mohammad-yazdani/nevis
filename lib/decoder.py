@@ -1,4 +1,5 @@
 import json
+from lib.feedback.feedback import FeedbackAgent
 import logging
 import os
 import shutil
@@ -31,8 +32,8 @@ class Decoder:
             "/workspace/nvidia-examples/", name.lower())
         self.result_dir = os.path.join("/tmp/results/", name.lower())
         self.prep_command = "prepare_data.sh"
-        self.batch_feedback_command = "run_feedback.sh"
-        self.batch_command = "run_benchmark.sh"
+        self.batch_feedback_command = "run_benchmark.sh"
+        self.batch_command = "run_benchmark_org.sh"
 
         self.last_run = None
         # Decoding lock
@@ -101,7 +102,8 @@ class Decoder:
                     extraction[header].write(str(conv[0]) + " " + str(conv[1]))
                     convo_repo[header].append(conv)
                 else:
-                    fd = os.path.join(self.result_dir, str(batch_id), str(iter_id), header + ".ctm")
+                    fd = os.path.join(self.result_dir, str(
+                        batch_id), str(iter_id), header + ".ctm")
                     # noinspection PyTypeChecker
                     extraction[header] = open(fd, "w")
                     convo_repo[header] = []
@@ -156,10 +158,12 @@ class Decoder:
                         if idx < (len(aligned_sentences) - 1):
                             aligned_sentences[idx].length = aligned_sentences[idx +
                                                                               1].words[0].timestamp
-                    aligned_sentences[(len(aligned_sentences) - 1)].length = duration
+                    aligned_sentences[(
+                        len(aligned_sentences) - 1)].length = duration
                 transcript_out = {"duration": duration, "length": len(alignment), "sentences": aligned_sentences,
                                   "complete": "1"}
-                out_json = open(os.path.join("/root/audio/batch" + str(batch_id), key + ".json"), "w")
+                out_json = open(os.path.join(
+                    "/root/audio/batch" + str(batch_id), key + ".json"), "w")
                 json.dump(transcript_out, out_json)
                 out_json.close()
                 batch_out[key] = transcript_out
@@ -174,24 +178,20 @@ class Decoder:
         batch_env["DATASET"] = os.path.join(
             "/root/audio/batch" + str(batch_id))
 
-        if self.use_feedback:
-            prep_process = Popen(["/bin/bash", self.batch_feedback_command],
-                                 stdin=PIPE, stderr=PIPE, env=batch_env, cwd=self.model_dir)
-            stdout, stderr = prep_process.communicate()
-            logging.debug(stdout)
-            logging.debug(stderr)
-            num_lines = len(open(os.path.join(
-                "/tmp/results", self.name, str(batch_id), "0", "trans")).readlines())
-            if num_lines < 2:
-                self.use_feedback = False
-                shutil.rmtree(os.path.join(
-                    "/tmp/results", self.name, str(batch_id)))
-                prep_process = Popen(["/bin/bash", self.batch_command],
-                                     stdin=PIPE, stderr=PIPE, env=batch_env, cwd=self.model_dir)
-                stdout, stderr = prep_process.communicate()
-                logging.debug(stdout)
-                logging.debug(stderr)
-        else:
+        # if self.use_feedback:
+        prep_process = Popen(["/bin/bash", self.batch_feedback_command],
+                             stdin=PIPE, stderr=PIPE, env=batch_env, cwd=self.model_dir)
+        stdout, stderr = prep_process.communicate()
+        logging.debug(stdout)
+        logging.debug(stderr)
+
+        num_words = len(open(os.path.join("/tmp/results", self.name,
+                                          str(batch_id), "0", "trans")).readlines()[0].split())
+        # Fallback to original model if retrained model doesn't decode
+        if num_words < 2:
+            self.use_feedback = False
+            shutil.rmtree(os.path.join(
+                "/tmp/results", self.name, str(batch_id)))
             prep_process = Popen(["/bin/bash", self.batch_command],
                                  stdin=PIPE, stderr=PIPE, env=batch_env, cwd=self.model_dir)
             stdout, stderr = prep_process.communicate()
@@ -236,7 +236,10 @@ class Decoder:
         if os.path.exists(self.result_dir):
             os.rmdir(self.result_dir)
 
-    def feedback(self) -> None:
+    def train_model(self, fb: FeedbackAgent) -> None:
+        fb.iter = self.model_trainings
+        fb.lk = self.batch_lk
+        fb.start()
         self.model_trainings += 1
 
     @staticmethod
@@ -275,6 +278,7 @@ class Decoder:
 
     @staticmethod
     def fetch_transcript(batch_id: int, corpus_id: str) -> object:
-        out_json = open(os.path.join("/root/audio/batch" + str(batch_id), corpus_id + ".json"), "r")
+        out_json = open(os.path.join("/root/audio/batch" +
+                                     str(batch_id), corpus_id + ".json"), "r")
         out_json = json.load(out_json)
         return out_json

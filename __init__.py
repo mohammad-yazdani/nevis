@@ -131,10 +131,15 @@ def submit_feedback():
         corpus_id = ""
     corrections = json.loads(request.data)["corrections"]
     # Get batch id
-    fa = FeedbackAgent(timedQueue.get_corpus_batch(corpus_id), corpus_id, corrections, aspire_decoder.feedback)
-    aspire_decoder.use_feedback = False # TODO : Change to true
-    fa.run()
+    fa = FeedbackAgent(timedQueue.get_corpus_batch(corpus_id), corpus_id, corrections)
+    aspire_decoder.train_model(fa)
     return {}
+
+@app.route('/feedback_iterations', methods=['GET'])
+def feedback_iterations():
+    return {
+        "iter": aspire_decoder.model_trainings
+    }
 
 # TODO : TEST
 # class User(db.Model):
@@ -145,15 +150,7 @@ def submit_feedback():
 #     active = db.Column(db.Boolean(), default=True, nullable=False)
 
 #     def __init__(self, email):
-#         self.email = email
-
-
-@app.route("/static/<path:filename>")
-def staticfiles(filename):
-    return send_from_directory(app.config["STATIC_FOLDER"], filename)
-
-
-@app.route("/media/<path:filename>")
+#         self.email = email./lib/feedback/__pycache__
 def mediafiles(filename):
     return send_from_directory(app.config["MEDIA_FOLDER"], filename)
 
