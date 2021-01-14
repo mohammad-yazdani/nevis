@@ -165,10 +165,9 @@ class Decoder:
                         if idx < (len(aligned_sentences) - 1):
                             aligned_sentences[idx].length = aligned_sentences[idx +
                                                                               1].words[0].timestamp
-                    if len(aligned_sentences) > 0:
-                        aligned_sentences[(len(aligned_sentences) - 1)].length = duration
+                    aligned_sentences[(len(aligned_sentences) - 1)].length = duration
                 
-                transcript_out = {"duration": duration, "length": len(alignment), "sentences": sentences,
+                transcript_out = {"duration": duration, "length": len(alignment), "sentences": aligned_sentences,
                                   "complete": "1"}
                 out_json = open(os.path.join(
                     "/root/audio/batch" + str(batch_id), key + ".json"), "w")
