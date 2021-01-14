@@ -9,6 +9,7 @@ from typing import Tuple
 
 from deepsegment import DeepSegment
 from flask import Flask, jsonify, make_response, request, send_from_directory
+from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 
 # from flask_sqlalchemy import SQLAlchemy
@@ -22,6 +23,7 @@ from tools.file_io import delete_if_exists
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
 
 app = Flask(__name__)
+CORS(app)
 # app.config.from_object("project.config.Config")
 # db = SQLAlchemy(app) TODO
 
@@ -60,12 +62,14 @@ def transcript_queue(media_buffer: bytes) -> str:
 
 
 @app.route('/')
+@cross_origin()
 def run():
     app.logger.debug('inside /')
     return "call /transcribe"
 
 
 @app.route('/transcribe_file', methods=['POST'])
+@cross_origin()
 def transcribe_file():
     app.logger.debug('Request is of type' + request.method)
     try:
@@ -83,6 +87,7 @@ def transcribe_file():
 
 
 @app.route('/get_transcript', methods=['GET'])
+@cross_origin()
 def get_transcript():
     corpus_id = request.args.get("corpus_id")
     fingerprint = None
@@ -113,6 +118,7 @@ def get_transcript():
 
 
 @app.route('/cached_transcript', methods=['GET'])
+@cross_origin()
 def cached_transcript():
     if "fingerprint" in request.args:
         fingerprint = request.args.get("fingerprint")
@@ -125,6 +131,7 @@ def cached_transcript():
 
 
 @app.route('/submit_feedback', methods=['POST'])
+@cross_origin()
 def submit_feedback():
     corpus_id = request.args.get("corpus_id")
     if corpus_id is None:
@@ -136,6 +143,7 @@ def submit_feedback():
     return {}
 
 @app.route('/feedback_iterations', methods=['GET'])
+@cross_origin()
 def feedback_iterations():
     return {
         "iter": aspire_decoder.model_trainings

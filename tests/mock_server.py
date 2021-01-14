@@ -52,7 +52,7 @@ def transcribe_file():
 def get_transcript():
     corpus_id = request.args.get("corpus_id")
     return {
-        "complete": "0",
+        "complete": "1",
         "queue": 0,
         "corpus_id_ack": corpus_id
     }

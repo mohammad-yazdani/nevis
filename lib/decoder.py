@@ -116,19 +116,22 @@ class Decoder:
         batch_out = {}
         for key in transcript_repo.keys():
             # noinspection PyBroadException
-            try:
+            # try:
                 transcript_tokens = transcript_repo[key]
                 transcript = ""
                 for tt in transcript_tokens:
                     transcript += (tt + " ")
                 alignment, duration = Decoder.calculate_alignment(
                     transcript_repo[key], transcript_int_repo[key], convo_repo[key])
+                
+                print("Alignment complete for ", key)
                 sentences = []
-                use_lstm = True
-                if use_lstm:
+                
+                try:
                     sentences = self.segmenter.segment_long(transcript)
-                else:
-                    # Because tensorflow is prone to breaking, I'm gonna consider every 5 words a sentence in case
+                    use_lstm = True;
+                except:
+                    use_lstm = False;
                     tokens = transcript.split()
                     for index in range(len(tokens)):
                         sntsz = len(sentences)
@@ -136,39 +139,44 @@ class Decoder:
                             sentences.append([])
                         word = tokens[int(index)]
                         sentences[int(index / 5)].append(word)
-
+                
                 w_dim = 0
                 aligned_sentences = list()
                 for s_raw in sentences:
-                    sentence = s_raw.split()
                     if use_lstm:
-                        aligned_sentence = list()
-                        for widx, word in enumerate(sentence):
-                            w_dim += 0
-                            Word(word, alignment[w_dim])
-                            word_obj = Word(word, alignment[w_dim])
-                            if widx == len(sentence) - 1:
-                                word_obj.add_tag("is_punctuated", True)
-                            aligned_sentence.append(word_obj)
+                        sentence = s_raw.split()
+                    else:
+                        sentence = s_raw
+                        sentence[-1] = sentence[-1] + "."
+                    
+                    aligned_sentence = list()
+                    for widx, word in enumerate(sentence):
+                        w_dim += 0
+                        Word(word, alignment[w_dim])
+                        word_obj = Word(word, alignment[w_dim])
+                        if widx == len(sentence) - 1:
+                            word_obj.add_tag("is_punctuated", True)
+                        aligned_sentence.append(word_obj)
 
-                        sentence_obj = Sentence(aligned_sentence, 0)
-                        aligned_sentences.append(sentence_obj)
+                    sentence_obj = Sentence(aligned_sentence, 0)
+                    aligned_sentences.append(sentence_obj)
 
                     for idx, _ in enumerate(aligned_sentences):
                         if idx < (len(aligned_sentences) - 1):
                             aligned_sentences[idx].length = aligned_sentences[idx +
                                                                               1].words[0].timestamp
-                    aligned_sentences[(
-                        len(aligned_sentences) - 1)].length = duration
-                transcript_out = {"duration": duration, "length": len(alignment), "sentences": aligned_sentences,
+                    if len(aligned_sentences) > 0:
+                        aligned_sentences[(len(aligned_sentences) - 1)].length = duration
+                
+                transcript_out = {"duration": duration, "length": len(alignment), "sentences": sentences,
                                   "complete": "1"}
                 out_json = open(os.path.join(
                     "/root/audio/batch" + str(batch_id), key + ".json"), "w")
                 json.dump(transcript_out, out_json)
                 out_json.close()
                 batch_out[key] = transcript_out
-            except:
-                print("Failed for ", key)
+            # except Exception as e:
+            #     print("Failed for ", key, "because of: ", e)
         return batch_out
 
     def decode_batch(self, batch_id: int, iter_id: int = 0) -> Dict[str, object]:
