@@ -8,7 +8,7 @@ import json
 from typing import Tuple
 
 from flask import Flask, jsonify, make_response, request, send_from_directory
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
