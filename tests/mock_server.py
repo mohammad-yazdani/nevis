@@ -50,9 +50,11 @@ def transcribe_file():
 @app.route('/get_transcript', methods=['GET'])
 @cross_origin()
 def get_transcript():
+    corpus_id = request.args.get("corpus_id")
     return {
         "complete": "0",
-        "queue": timedQueue.active
+        "queue": 0,
+        "corpus_id_ack": corpus_id
     }
 
 
