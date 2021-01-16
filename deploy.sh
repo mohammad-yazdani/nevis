@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+# export CUDA_VISIBLE_DEVICES=1
+python3 __init__.py
+
