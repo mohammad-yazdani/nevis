@@ -1,4 +1,1 @@
-#!/usr/bin/bash
-# export CUDA_VISIBLE_DEVICES=1
-python3 __init__.py
-
+gunicorn --workers 1 --bind unix:nevis.sock -m 007 __init__:app
