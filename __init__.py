@@ -35,13 +35,13 @@ cache = TranscriptCache(lru_policy)
 start = time.time()
 aspire_decoder = Decoder("aspire", 8000)
 if not os.path.exists("/workspace/nvidia-examples/aspire/run_benchmark.sh"):
-    aspire_decoder.initalize()
+    aspire_decoder.initialize()
 # librispeech_decoder = Decoder("librispeech")
 # if not os.path.exists("/workspace/nvidia-examples/librispeech/run_benchmark.sh"):
-    # librispeech_decoder.initalize()
-print(time.time() - start, "\t|", "Kaldi loaded!")
+    # librispeech_decoder.initialize()
+logging.info(time.time() - start, "\t|", "Kaldi loaded!")
 
-# Initalize transcription queue
+# Initialize transcription queue
 timedQueue = TimedQueue(aspire_decoder)
 
 
@@ -157,7 +157,7 @@ def feedback_iterations():
 
 #     def __init__(self, email):
 #         self.email = email./lib/feedback/__pycache__
-def mediafiles(filename):
+def media_files(filename):
     return send_from_directory(app.config["MEDIA_FOLDER"], filename)
 
 
@@ -179,7 +179,7 @@ if __name__ == '__main__':
         if os.path.exists(past_data) and os.path.isdir(past_data):
             shutil.rmtree(past_data)
         for file in glob.glob(r'/root/audio/batch*'):
-            print("Deleting ", file)
+            logging.debug("Deleting ", file)
             shutil.rmtree(file)
     logging.getLogger().setLevel(logging.DEBUG)
     app.run(host='0.0.0.0', port=8080, debug=False)

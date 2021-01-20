@@ -1,3 +1,4 @@
+import logging
 import os
 from threading import Thread, Lock
 from typing import List
@@ -11,11 +12,12 @@ RETRAIN_SCRIPT = "./lib/feedback/retrain.sh"
 
 class FeedbackAgent(Thread):
 
-    def __init__(self, batch_id: int, corpus_id: str, corrections: List[str], callback):
+    def __init__(self, batch_id: int, corpus_id: str, corrections: List[str]):
         super(FeedbackAgent, self).__init__()
         self.batch_id = batch_id
         self.corpus_id = corpus_id
         self.corpus_ext = corrections
+        # noinspection PyTypeChecker
         self.lk: Lock = None
 
     def run(self) -> None:
@@ -33,21 +35,22 @@ class FeedbackAgent(Thread):
             sf.why()
 
         words_set = "/opt/kaldi/egs/aspire/s5/words.txt"
+        # noinspection PyBroadException
         try:
             with open(words_set, "a") as wsfd:
                 for w in self.corpus_ext:
                     wsfd.write(w.upper() + "\n")
         except:
-            print("No corrections")
+            logging.debug("No corrections")
             self.lk.release()
             return
 
-        print("Thread ", self, "running retraining job on batch:",
+        logging.debug("Thread ", self, "running retraining job on batch:",
               self.batch_id, "corpus:", self.corpus_id)
         shell = Shell()
         while True:
             try:
-                print(shell.shell_execute(RETRAIN_SCRIPT))
+                logging.debug(shell.shell_execute(RETRAIN_SCRIPT))
                 break
             except ShellFail as sf:
                 sf.why()

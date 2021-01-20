@@ -1,14 +1,16 @@
-from lib.decoder import Decoder
-from lib.audio import Audio
-from lib.batch import Batch, BatchFull, ToDecode
-from threading import Event, Thread, Lock
-from queue import Queue, Empty
-from typing import Tuple, Dict
+import logging
 import os
+from queue import Queue, Empty
+from threading import Event, Thread, Lock
+from typing import Dict
+
+from lib.audio import Audio
+from lib.batch import Batch, ToDecode
+from lib.decoder import Decoder
 
 THRESHOLD = 20          # In seconds
 MAX_READY = 1000        # Max number of items in queue
-MAX_BATCH_SIZE = 10     # Max number of Decodings in a batch
+MAX_BATCH_SIZE = 10     # Max number of Decoding in a batch
 
 class TimedQueue(Thread):
     def __init__(self, decoder: Decoder):
@@ -17,18 +19,17 @@ class TimedQueue(Thread):
         self.exit_flag = Event()
         self.decoder = decoder
         self.batches = 0
-        self.output: Dict[int, Dict[str, object]] = {}
+        self.output: Dict[str, Dict[str, object]] = {}
         self.queue_lk = Lock()
         self.active = 0
         self.corpus_map: Dict[str, int] = {}
 
     def run(self) -> None:
-        print("TimedQueue", os.getpid(), "run")
+        logging.debug("TimedQueue", os.getpid(), "run")
         while not self.exit_flag.wait(timeout=THRESHOLD):
             self.make_batch()
-        print("TimedQueue", os.getpid(), "terminated")
+        logging.debug("TimedQueue", os.getpid(), "terminated")
 
-    # TODO : Review the atomicity of these methods
     def accept(self, media: bytes, decoder: Decoder) -> str:
         td: ToDecode = Audio.prepare(media, decoder.bit_rate)
         self.ready.put_nowait(td)
@@ -36,8 +37,7 @@ class TimedQueue(Thread):
         return td.corpus_id
 
     def make_batch(self) -> None:
-        # self.queue_lk.acquire(blocking=True)
-        batch = Batch(self.decoder, self.batches, self.recieve, MAX_BATCH_SIZE)
+        batch = Batch(self.decoder, self.batches, self.receive, MAX_BATCH_SIZE)
         try:
             for _ in range(MAX_BATCH_SIZE):
                 decoding = self.ready.get_nowait()
@@ -50,12 +50,11 @@ class TimedQueue(Thread):
             return
 
         self.batches += 1
-        # self.queue_lk.release()
 
         # Non-blocking
         batch.start()
 
-    def recieve(self, corpus_id: str, transcript: object) -> None:
+    def receive(self, corpus_id: str, transcript: Dict[str, object]) -> None:
         self.active -= 1
         self.output[corpus_id] = transcript
 

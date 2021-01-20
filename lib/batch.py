@@ -27,6 +27,7 @@ class ToDecode:
 
 
 class Batch(Thread):
+    batch_prefix: str = "/root/audio/batch"
     batch_idx: int = 0
 
     def __init__(self, decoder: Decoder, batch_id: int, reciever, max_batch_size) -> None:
@@ -49,12 +50,10 @@ class Batch(Thread):
     def run(self) -> None:
         if len(self.batch) > 0:
 
-            delete_if_exists(os.path.join(
-                "/root/audio/batch" + str(self.batch_id)))
-            os.mkdir(os.path.join("/root/audio/batch" + str(self.batch_id)))
+            delete_if_exists(os.path.join(Batch.batch_prefix + str(self.batch_id)))
+            os.mkdir(os.path.join(Batch.batch_prefix + str(self.batch_id)))
             for d in self.batch:
-                wav_path = os.path.join(
-                    "/root/audio/batch" + str(self.batch_id), d.basename + ".wav")
+                wav_path = os.path.join(Batch.batch_prefix + str(self.batch_id), d.basename + ".wav")
                 shutil.move(d.wav_path, wav_path)
             batch_out = self.decoder.decode_batch(self.batch_id)
             for key in batch_out.keys():

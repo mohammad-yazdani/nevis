@@ -40,14 +40,14 @@ class Decoder:
 
         self.model_trainings = 0
 
-    def initalize(self) -> None:
+    def initialize(self) -> None:
         prep_process = Popen(["/bin/bash", self.prep_command],
                              stdin=PIPE, stderr=PIPE, cwd=self.model_dir)
         stdout, stderr = prep_process.communicate()
         logging.debug(stdout)
         logging.debug(stderr)
 
-    def init_segmenter(self):
+    def init_segment(self):
         from deepsegment import DeepSegment
         self.segmenter = DeepSegment("en", tf_serving=False)
 
@@ -113,7 +113,7 @@ class Decoder:
             for k in extraction.keys():
                 extraction[k].close()
         except:
-            print("Failed for batch ", batch_id)
+            logging.error("Failed for batch ", batch_id)
             return {}
 
         batch_out = {}
@@ -127,27 +127,27 @@ class Decoder:
                 alignment, duration = Decoder.calculate_alignment(
                     transcript_repo[key], transcript_int_repo[key], convo_repo[key])
                 
-                print("Alignment complete for ", key)
+                logging.debug("Alignment complete for ", key)
                 sentences = []
-                
+
+                # noinspection PyBroadException
                 try:
                     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
                     
-                    self.init_segmenter()
+                    self.init_segment()
                     sentences = self.segmenter.segment_long(transcript)
                     
-                    use_lstm = True;
-                except:
-                    use_lstm = False;
+                    use_lstm = True
+                except Exception as e:
+                    logging.error(e)
+                    use_lstm = False
                     tokens = transcript.split()
                     for index in range(len(tokens)):
-                        sntsz = len(sentences)
-                        if sntsz < (int(index / 5) + 1):
+                        sentence_size = len(sentences)
+                        if sentence_size < (int(index / 5) + 1):
                             sentences.append([])
                         word = tokens[int(index)]
                         sentences[int(index / 5)].append(word)
-                os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-                print("SEGMENTATION DONE, offloading tf...")
 
                 w_dim = 0
                 aligned_sentences = list()
@@ -183,9 +183,8 @@ class Decoder:
                 json.dump(transcript_out, out_json)
                 out_json.close()
                 batch_out[key] = transcript_out
-            # except Exception as e:
-            #     print("Failed for ", key, "because of: ", e)
-        # TODO : Release GPU
+
+        # Release GPU
         device = cuda.get_current_device()
         device.reset()
         return batch_out
@@ -280,15 +279,15 @@ class Decoder:
             word_table[wt_idx] = words[i]
         offset = 0.0
         for i in range(len_lats):
-            olat = lats[i][0]
-            if olat == 0.0:
+            original_lats = lats[i][0]
+            if original_lats == 0.0:
                 # noinspection PyBroadException
                 try:
                     next_lat = lats[i + 1][0]
-                    olat = next_lat / 2
+                    original_lats = next_lat / 2
                 except:
-                    olat = 0.05
-            offset += olat
+                    original_lats = 0.05
+            offset += original_lats
             lat_i = int(lats[i][1])
             w = word_table[lat_i]
             align = offset - lats[i][0]

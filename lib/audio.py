@@ -1,22 +1,25 @@
-from lib.batch import ToDecode
-import os
 import codecs
+import logging
+import os
 import subprocess
-from tools.file_io import delete_if_exists
+from typing import Optional
+
 from pydub.audio_segment import AudioSegment
 
-CORPUS_SZ = 16
+from lib.batch import ToDecode
+
+CORPUS_HASH_LEN = 16
 
 class Audio:
     epoch: int = 0
 
     @staticmethod
-    def prepare(media: bytes, bit_rate: int) -> ToDecode:
-        corpus_id = codecs.encode(os.urandom(CORPUS_SZ), 'hex').decode()
+    def prepare(media: bytes, bit_rate: int) -> Optional[ToDecode]:
+        corpus_id = codecs.encode(os.urandom(CORPUS_HASH_LEN), 'hex').decode()
         wav_in = os.path.join(Audio.get_prefix(), corpus_id + ".pre.wav")
         wav_out = os.path.join(Audio.get_prefix(), corpus_id + ".wav")
         while os.path.exists(wav_out) or os.path.exists(wav_in):
-            corpus_id = codecs.encode(os.urandom(CORPUS_SZ), 'hex').decode()
+            corpus_id = codecs.encode(os.urandom(CORPUS_HASH_LEN), 'hex').decode()
             wav_in = os.path.join(Audio.get_prefix(), corpus_id + ".pre.wav")
             wav_out = os.path.join(Audio.get_prefix(), corpus_id + ".wav")
 
@@ -29,8 +32,8 @@ class Audio:
         p = subprocess.Popen(ffmpeg_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output, err = p.communicate()
         if p.returncode != 0:
-            print(output.decode("utf-8"))
-            print(err.decode("utf-8"))
+            logging.debug(output.decode("utf-8"))
+            logging.error(err.decode("utf-8"))
             return None
         
         sound = AudioSegment.from_wav(wav_out)
