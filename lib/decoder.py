@@ -15,8 +15,8 @@ from lib.word import Word
 
 
 class Decoder:
-    def __init__(self, name: str, bit_rate: int, segmenter: DeepSegment, iteration: int = 1, max_active: int = 5000,
-                 max_batch_size=50) -> None:
+    def __init__(self, name: str, bit_rate: int, segmenter: DeepSegment, iteration: int = 1, max_active: int = 10000,
+                 max_batch_size=100) -> None:
         super().__init__()
         self.name = name
         self.bit_rate = bit_rate
