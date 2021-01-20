@@ -8,19 +8,18 @@ from subprocess import Popen, PIPE
 from threading import Lock
 from typing import List, Tuple, Dict
 
-from deepsegment.deepsegment import DeepSegment
-
 from lib.segment import Sentence
 from lib.word import Word
+from numba import cuda 
 
 
 class Decoder:
-    def __init__(self, name: str, bit_rate: int, segmenter: DeepSegment, iteration: int = 1, max_active: int = 10000,
-                 max_batch_size=100) -> None:
+    def __init__(self, name: str, bit_rate: int, iteration: int = 1, max_active: int = 10000,
+                 max_batch_size=50) -> None:
         super().__init__()
         self.name = name
         self.bit_rate = bit_rate
-        self.segmenter = segmenter
+        self.segmenter = None
         self.use_feedback = False
 
         self.env = os.environ.copy()
@@ -47,6 +46,10 @@ class Decoder:
         stdout, stderr = prep_process.communicate()
         logging.debug(stdout)
         logging.debug(stderr)
+
+    def init_segmenter(self):
+        from deepsegment import DeepSegment
+        self.segmenter = DeepSegment("en", tf_serving=False)
 
     def extract_corpora(self, batch_id: int, iter_id: int = 0) -> Dict[str, object]:
         # noinspection PyBroadException
@@ -128,7 +131,11 @@ class Decoder:
                 sentences = []
                 
                 try:
+                    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+                    
+                    self.init_segmenter()
                     sentences = self.segmenter.segment_long(transcript)
+                    
                     use_lstm = True;
                 except:
                     use_lstm = False;
@@ -139,7 +146,9 @@ class Decoder:
                             sentences.append([])
                         word = tokens[int(index)]
                         sentences[int(index / 5)].append(word)
-                
+                os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+                print("SEGMENTATION DONE, offloading tf...")
+
                 w_dim = 0
                 aligned_sentences = list()
                 for s_raw in sentences:
@@ -176,6 +185,9 @@ class Decoder:
                 batch_out[key] = transcript_out
             # except Exception as e:
             #     print("Failed for ", key, "because of: ", e)
+        # TODO : Release GPU
+        device = cuda.get_current_device()
+        device.reset()
         return batch_out
 
     def decode_batch(self, batch_id: int, iter_id: int = 0) -> Dict[str, object]:

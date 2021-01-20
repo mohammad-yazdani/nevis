@@ -7,7 +7,8 @@ import time
 import json
 from typing import Tuple
 
-from deepsegment import DeepSegment
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+
 from flask import Flask, jsonify, make_response, request, send_from_directory
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
@@ -28,14 +29,11 @@ CORS(app)
 # db = SQLAlchemy(app) TODO
 
 lru_policy = LRU(1000)
-cache = TranscriptCache(lru_policy)
-
-# Load LSTM segmenter model
-lstm_segmenter = DeepSegment("en", tf_serving=False)
+cache = TranscriptCache(lru_policy) 
 
 # Loading Kaldi stuff
 start = time.time()
-aspire_decoder = Decoder("aspire", 8000, lstm_segmenter)
+aspire_decoder = Decoder("aspire", 8000)
 if not os.path.exists("/workspace/nvidia-examples/aspire/run_benchmark.sh"):
     aspire_decoder.initalize()
 # librispeech_decoder = Decoder("librispeech")
