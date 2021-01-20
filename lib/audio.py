@@ -10,6 +10,7 @@ from lib.batch import ToDecode
 
 CORPUS_HASH_LEN = 16
 
+
 class Audio:
     epoch: int = 0
 
@@ -35,7 +36,7 @@ class Audio:
             logging.debug(output.decode("utf-8"))
             logging.error(err.decode("utf-8"))
             return None
-        
+
         sound = AudioSegment.from_wav(wav_out)
         sound = sound.set_channels(1)
         sound.export(wav_out, format="wav")

@@ -1,6 +1,8 @@
+from threading import Lock
+
 from lib.caching.fingerprint import is_similar
 from lib.caching.policy import Policy
-from threading import Lock
+
 
 class TranscriptCache:
     def __init__(self, policy: Policy):
@@ -20,7 +22,7 @@ class TranscriptCache:
         resolution = {}
         # cached = self.policy.resolve(key)
         # if cached:
-            # resolution = self.cache[key]
+        # resolution = self.cache[key]
         self.cache_lk.acquire()
         cache_instance = self.cache.copy()
         self.cache_lk.release()

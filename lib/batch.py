@@ -4,9 +4,8 @@ from dataclasses import dataclass
 from threading import Thread
 from typing import List
 
-from tools.file_io import delete_if_exists
-
 from lib.decoder import Decoder
+from tools.file_io import delete_if_exists
 
 
 class BatchFull(Exception):

@@ -8,9 +8,10 @@ from lib.audio import Audio
 from lib.batch import Batch, ToDecode
 from lib.decoder import Decoder
 
-THRESHOLD = 20          # In seconds
-MAX_READY = 1000        # Max number of items in queue
-MAX_BATCH_SIZE = 10     # Max number of Decoding in a batch
+THRESHOLD = 20  # In seconds
+MAX_READY = 1000  # Max number of items in queue
+MAX_BATCH_SIZE = 10  # Max number of Decoding in a batch
+
 
 class TimedQueue(Thread):
     def __init__(self, decoder: Decoder):
@@ -42,7 +43,7 @@ class TimedQueue(Thread):
             for _ in range(MAX_BATCH_SIZE):
                 decoding = self.ready.get_nowait()
                 self.corpus_map[decoding.corpus_id] = batch.batch_id
-                batch.add(decoding)            
+                batch.add(decoding)
         except Empty:
             pass
 

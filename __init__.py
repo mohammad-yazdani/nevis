@@ -1,10 +1,10 @@
 import argparse
 import glob
+import json
 import logging
 import os
 import shutil
 import time
-import json
 from typing import Tuple
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
@@ -29,7 +29,7 @@ CORS(app)
 # db = SQLAlchemy(app) TODO
 
 lru_policy = LRU(1000)
-cache = TranscriptCache(lru_policy) 
+cache = TranscriptCache(lru_policy)
 
 # Loading Kaldi stuff
 start = time.time()
@@ -38,7 +38,7 @@ if not os.path.exists("/workspace/nvidia-examples/aspire/run_benchmark.sh"):
     aspire_decoder.initialize()
 # librispeech_decoder = Decoder("librispeech")
 # if not os.path.exists("/workspace/nvidia-examples/librispeech/run_benchmark.sh"):
-    # librispeech_decoder.initialize()
+# librispeech_decoder.initialize()
 logging.info(time.time() - start, "\t|", "Kaldi loaded!")
 
 # Initialize transcription queue
@@ -102,13 +102,13 @@ def get_transcript():
         return tobj
     elif corpus_id in timedQueue.corpus_map:
         try:
-            tobj =  Decoder.fetch_transcript(timedQueue.get_corpus_batch(corpus_id), corpus_id)
+            tobj = Decoder.fetch_transcript(timedQueue.get_corpus_batch(corpus_id), corpus_id)
             tobj["quality"] = aspire_decoder.model_trainings
             cache.add(fingerprint, tobj)
             return tobj
         except Exception as error:
             app.logger.debug("ERROR: " + str(error))
-    
+
     return {
         "complete": "0",
         "queue": timedQueue.active
@@ -140,12 +140,14 @@ def submit_feedback():
     aspire_decoder.train_model(fa)
     return {}
 
+
 @app.route('/feedback_iterations', methods=['GET'])
 @cross_origin()
 def feedback_iterations():
     return {
         "iter": aspire_decoder.model_trainings
     }
+
 
 # TODO : TEST
 # class User(db.Model):
@@ -168,6 +170,8 @@ def upload_file():
         filename = secure_filename(input_file.filename)
         file.save(os.path.join(app.config["MEDIA_FOLDER"], filename))
     return []
+
+
 # TODO : TEST
 
 
@@ -183,4 +187,3 @@ if __name__ == '__main__':
             shutil.rmtree(file)
     logging.getLogger().setLevel(logging.DEBUG)
     app.run(host='0.0.0.0', port=8080, debug=False)
-

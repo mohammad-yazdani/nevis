@@ -1,5 +1,4 @@
 import json
-from lib.feedback.feedback import FeedbackAgent
 import logging
 import os
 import shutil
@@ -8,9 +7,11 @@ from subprocess import Popen, PIPE
 from threading import Lock
 from typing import List, Tuple, Dict
 
+from numba import cuda
+
+from lib.feedback.feedback import FeedbackAgent
 from lib.segment import Sentence
 from lib.word import Word
-from numba import cuda
 
 
 class Decoder:

@@ -29,7 +29,7 @@ shutil.copy("lm.arpa", output_model)
 
 ngram_3_query = "grep -n \"3-gram\" " + output_model
 p = subprocess.Popen(ngram_3_query, shell=True,
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=LEXICON_ENV)
+                     stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=LEXICON_ENV)
 output, err = p.communicate()
 if p.returncode != 0:
     print("ERROR:", p.returncode)
@@ -50,28 +50,28 @@ try:
             os.remove(output_model + ".gz")
 
         p = subprocess.Popen(query_command, shell=True,
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=LEXICON_ENV)
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=LEXICON_ENV)
         _, err = p.communicate()
         if p.returncode != 0:
             print("ERROR:", p.returncode)
             print(err.decode("utf-8"))
 
         p = subprocess.Popen(gzip_command, shell=True, stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE, env=LEXICON_ENV)
+                             stderr=subprocess.PIPE, env=LEXICON_ENV)
         _, err = p.communicate()
         if p.returncode != 0:
             print("ERROR:", p.returncode)
             print(err.decode("utf-8"))
 
         p = subprocess.Popen(query_command, shell=True,
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=LEXICON_ENV)
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=LEXICON_ENV)
         output, err = p.communicate()
         if p.returncode != 0:
             print("ERROR:", p.returncode)
             print(err.decode("utf-8"))
 
         invalid_line = int(output)
-        print("Invalid line:", invalid_line, "of " , len(lines), "lines.")
+        print("Invalid line:", invalid_line, "of ", len(lines), "lines.")
         del lines[invalid_line - 1]
 
         target_file = open(output_model, "w")
@@ -90,21 +90,21 @@ except ValueError:
     pass
 
 p = subprocess.Popen(compile_command, shell=True,
-                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=LEXICON_ENV)
+                     stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=LEXICON_ENV)
 _, err = p.communicate()
 if p.returncode != 0:
     print("ERROR:", p.returncode)
     print(err.decode("utf-8"))
 
 p = subprocess.Popen(HCLG_graph_command, shell=True,
-                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=LEXICON_ENV)
+                     stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=LEXICON_ENV)
 _, err = p.communicate()
 if p.returncode != 0:
     print("ERROR:", p.returncode)
     print(err.decode("utf-8"))
 
 p = subprocess.Popen(prep_decode_command, shell=True,
-                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=LEXICON_ENV)
+                     stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=LEXICON_ENV)
 _, err = p.communicate()
 if p.returncode != 0:
     print("ERROR:", p.returncode)

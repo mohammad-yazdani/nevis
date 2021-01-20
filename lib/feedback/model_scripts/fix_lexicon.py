@@ -1,6 +1,6 @@
 import os
-import subprocess
 import shutil
+import subprocess
 
 query_command = "utils/prepare_lang.sh --phone-symbol-table $phones_src $dict_src \"\" $dict_tmp $dict | grep \"ERROR:\" | awk '{print $4}' | grep \\\""
 src_file = "new/local/dict/lexicon.txt"

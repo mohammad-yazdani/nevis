@@ -46,7 +46,7 @@ class FeedbackAgent(Thread):
             return
 
         logging.debug("Thread ", self, "running retraining job on batch:",
-              self.batch_id, "corpus:", self.corpus_id)
+                      self.batch_id, "corpus:", self.corpus_id)
         shell = Shell()
         while True:
             try:
@@ -54,5 +54,5 @@ class FeedbackAgent(Thread):
                 break
             except ShellFail as sf:
                 sf.why()
-        
+
         self.lk.release()
