@@ -1,7 +1,6 @@
+import os
 import shutil
 import subprocess
-import os
-import sys
 
 query_command = "utils/format_lm.sh $dict $lm_src.gz $dict_src/lexicon.txt $lang 2>&1 | grep Invalid | awk '{print $4}'"
 output_model = "new/local/lang/lm.arpa"

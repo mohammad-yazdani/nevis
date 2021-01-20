@@ -30,12 +30,12 @@ class Batch(Thread):
     batch_prefix: str = "/root/audio/batch"
     batch_idx: int = 0
 
-    def __init__(self, decoder: Decoder, batch_id: int, reciever, max_batch_size) -> None:
+    def __init__(self, decoder: Decoder, batch_id: int, receiver, max_batch_size) -> None:
         super(Batch, self).__init__()
         self.batch_id = batch_id
         self.batch: List[ToDecode] = []
         self.decoder = decoder
-        self.recv = reciever
+        self.recv = receiver
         self.max_batch_size = max_batch_size
 
     def add(self, td: ToDecode) -> None:

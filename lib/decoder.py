@@ -10,7 +10,7 @@ from typing import List, Tuple, Dict
 
 from lib.segment import Sentence
 from lib.word import Word
-from numba import cuda 
+from numba import cuda
 
 
 class Decoder:
@@ -120,69 +120,69 @@ class Decoder:
         for key in transcript_repo.keys():
             # noinspection PyBroadException
             # try:
-                transcript_tokens = transcript_repo[key]
-                transcript = ""
-                for tt in transcript_tokens:
-                    transcript += (tt + " ")
-                alignment, duration = Decoder.calculate_alignment(
-                    transcript_repo[key], transcript_int_repo[key], convo_repo[key])
-                
-                logging.debug("Alignment complete for ", key)
-                sentences = []
+            transcript_tokens = transcript_repo[key]
+            transcript = ""
+            for tt in transcript_tokens:
+                transcript += (tt + " ")
+            alignment, duration = Decoder.calculate_alignment(
+                transcript_repo[key], transcript_int_repo[key], convo_repo[key])
 
-                # noinspection PyBroadException
-                try:
-                    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-                    
-                    self.init_segment()
-                    sentences = self.segmenter.segment_long(transcript)
-                    
-                    use_lstm = True
-                except Exception as e:
-                    logging.error(e)
-                    use_lstm = False
-                    tokens = transcript.split()
-                    for index in range(len(tokens)):
-                        sentence_size = len(sentences)
-                        if sentence_size < (int(index / 5) + 1):
-                            sentences.append([])
-                        word = tokens[int(index)]
-                        sentences[int(index / 5)].append(word)
+            logging.debug("Alignment complete for ", key)
+            sentences = []
 
-                w_dim = 0
-                aligned_sentences = list()
-                for s_raw in sentences:
-                    if use_lstm:
-                        sentence = s_raw.split()
-                    else:
-                        sentence = s_raw
-                        sentence[-1] = sentence[-1] + "."
-                    
-                    aligned_sentence = list()
-                    for widx, word in enumerate(sentence):
-                        w_dim += 0
-                        Word(word, alignment[w_dim])
-                        word_obj = Word(word, alignment[w_dim])
-                        if widx == len(sentence) - 1:
-                            word_obj.add_tag("is_punctuated", True)
-                        aligned_sentence.append(word_obj)
+            # noinspection PyBroadException
+            try:
+                os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
-                    sentence_obj = Sentence(aligned_sentence, 0)
-                    aligned_sentences.append(sentence_obj)
+                self.init_segment()
+                sentences = self.segmenter.segment_long(transcript)
 
-                    for idx, _ in enumerate(aligned_sentences):
-                        if idx < (len(aligned_sentences) - 1):
-                            aligned_sentences[idx].length = aligned_sentences[idx +
-                                                                              1].words[0].timestamp
-                    aligned_sentences[(len(aligned_sentences) - 1)].length = duration
-                
-                transcript_out = {"duration": duration, "length": len(alignment), "sentences": aligned_sentences,
-                                  "complete": "1"}
-                out_json = open(os.path.join(
-                    "/root/audio/batch" + str(batch_id), key + ".json"), "w")
-                json.dump(transcript_out, out_json)
-                out_json.close()
-                batch_out[key] = transcript_out
+                use_lstm = True
+            except Exception as e:
+                logging.error(e)
+                use_lstm = False
+                tokens = transcript.split()
+                for index in range(len(tokens)):
+                    sentence_size = len(sentences)
+                    if sentence_size < (int(index / 5) + 1):
+                        sentences.append([])
+                    word = tokens[int(index)]
+                    sentences[int(index / 5)].append(word)
+
+            w_dim = 0
+            aligned_sentences = list()
+            for s_raw in sentences:
+                if use_lstm:
+                    sentence = s_raw.split()
+                else:
+                    sentence = s_raw
+                    sentence[-1] = sentence[-1] + "."
+
+                aligned_sentence = list()
+                for widx, word in enumerate(sentence):
+                    w_dim += 0
+                    Word(word, alignment[w_dim])
+                    word_obj = Word(word, alignment[w_dim])
+                    if widx == len(sentence) - 1:
+                        word_obj.add_tag("is_punctuated", True)
+                    aligned_sentence.append(word_obj)
+
+                sentence_obj = Sentence(aligned_sentence, 0)
+                aligned_sentences.append(sentence_obj)
+
+                for idx, _ in enumerate(aligned_sentences):
+                    if idx < (len(aligned_sentences) - 1):
+                        aligned_sentences[idx].length = aligned_sentences[idx +
+                                                                          1].words[0].timestamp
+                aligned_sentences[(len(aligned_sentences) - 1)].length = duration
+
+            transcript_out = {"duration": duration, "length": len(alignment), "sentences": aligned_sentences,
+                              "complete": "1"}
+            out_json = open(os.path.join(
+                "/root/audio/batch" + str(batch_id), key + ".json"), "w")
+            json.dump(transcript_out, out_json)
+            out_json.close()
+            batch_out[key] = transcript_out
 
         # Release GPU
         device = cuda.get_current_device()
