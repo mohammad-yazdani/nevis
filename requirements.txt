@@ -299,3 +299,6 @@ zict==2.0.0
 zipp @ file:///tmp/build/80754af9/zipp_1604001098328/work
 zope.event==4.5.0
 zope.interface @ file:///tmp/build/80754af9/zope.interface_1602002420968/work
+
+numba~=0.51.2
+tensorflow-gpu~=2.4.0

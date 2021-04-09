@@ -1,6 +1,7 @@
-import textdistance
 import sys
 from typing import Tuple
+
+import textdistance
 
 BLOCK_SZ = 256
 
