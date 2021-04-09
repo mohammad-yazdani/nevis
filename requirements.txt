@@ -280,7 +280,7 @@ txt2txt==1.0.9
 typing-extensions==3.7.4.3
 ujson @ file:///tmp/build/80754af9/ujson_1602523317881/work
 unicodecsv==0.14.1
-urllib3==1.26.2
+urllib3==1.26.4
 wasabi==0.8.0
 watchdog @ file:///tmp/build/80754af9/watchdog_1593447344699/work
 wcwidth @ file:///tmp/build/80754af9/wcwidth_1593447189090/work
