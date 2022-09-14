@@ -4,3 +4,4 @@ textdistance
 numba
 pydub
 deepsegment
+tensorflow
