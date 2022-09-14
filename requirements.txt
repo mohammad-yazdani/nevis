@@ -3,3 +3,4 @@ flask_cors
 textdistance
 numba
 pydub
+deepsegment
