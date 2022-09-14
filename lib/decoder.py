@@ -1,6 +1,9 @@
+from genericpath import exists
 import json
 import logging
 import os
+from os import mkdir
+from os.path import exists
 import shutil
 from io import TextIOWrapper
 from subprocess import Popen, PIPE
@@ -30,7 +33,11 @@ class Decoder:
 
         self.model_dir = os.path.join(
             "/workspace/nvidia-examples/", name.lower())
+        if not exists("/tmp/results/"):
+            mkdir("/tmp/results/")
         self.result_dir = os.path.join("/tmp/results/", name.lower())
+        if not exists(self.result_dir):
+            mkdir(self.result_dir)
         self.prep_command = "prepare_data.sh"
         self.batch_feedback_command = "run_benchmark.sh"
         self.batch_command = "run_benchmark_org.sh"
@@ -75,8 +82,14 @@ class Decoder:
 
                 transcript_repo[header] = trans.split()
 
-            trans_int_file = open(os.path.join(self.result_dir, str(
-                batch_id), str(iter_id), "trans_int_combined"))
+            trans_int_path = os.path.join(self.result_dir, str(
+                batch_id), str(iter_id), "trans_int")
+            trans_int_combined_path = os.path.join(self.result_dir, str(
+                batch_id), str(iter_id), "trans_int_combined")
+            if exists(trans_int_combined_path):
+                trans_int_file = open(trans_int_combined_path)
+            else:
+                trans_int_file = open(trans_int_path)
             transcript_ints = trans_int_file.readlines()
             transcript_int_repo: Dict[str, List[int]] = {}
             for t in transcript_ints:
@@ -90,8 +103,9 @@ class Decoder:
                 transcript_int_repo[header] = list(
                     map(lambda x: int(x), trans.split()))
 
-            cmt_file = open(os.path.join(self.result_dir, str(
-                batch_id), str(iter_id), "CTM.ctm"))
+            cmt_file_path = os.path.join(self.result_dir, str(
+                batch_id), str(iter_id), "CTM.ctm")
+            cmt_file = open(cmt_file_path)
             convo = cmt_file.readlines()
             # noinspection PyTypeChecker
             extraction: Dict[str, TextIOWrapper] = {}
@@ -125,6 +139,10 @@ class Decoder:
             transcript = ""
             for tt in transcript_tokens:
                 transcript += (tt + " ")
+            
+            # TODO : TEST
+            if key not in convo_repo:
+                convo_repo[key] = []
             alignment, duration = Decoder.calculate_alignment(
                 transcript_repo[key], transcript_int_repo[key], convo_repo[key])
 
@@ -161,12 +179,11 @@ class Decoder:
 
                 aligned_sentence = list()
                 for widx, word in enumerate(sentence):
-                    w_dim += 0
-                    Word(word, alignment[w_dim])
                     word_obj = Word(word, alignment[w_dim])
                     if widx == len(sentence) - 1:
                         word_obj.add_tag("is_punctuated", True)
                     aligned_sentence.append(word_obj)
+                    w_dim += 1
 
                 sentence_obj = Sentence(aligned_sentence, 0)
                 aligned_sentences.append(sentence_obj)
@@ -272,8 +289,9 @@ class Decoder:
         assert len_words == len_idx
         if len_idx > len_lats:
             lats.insert(0, [0.0, idx[0]])
-            if lats[0][0] == lats[1][0]:
-                lats[1][0] = (lats[2][0] / 2)
+            if len(lats) > 2:
+                if lats[0][0] == lats[1][0]:
+                    lats[1][0] = (lats[2][0] / 2)
 
         for i in range(len_idx):
             wt_idx = idx[i]

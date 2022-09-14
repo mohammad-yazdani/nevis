@@ -172,9 +172,6 @@ def upload_file():
     return []
 
 
-# TODO : TEST
-
-
 if __name__ == '__main__':
     timedQueue.start()
     clean = True

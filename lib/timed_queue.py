@@ -26,10 +26,10 @@ class TimedQueue(Thread):
         self.corpus_map: Dict[str, int] = {}
 
     def run(self) -> None:
-        logging.debug("TimedQueue", os.getpid(), "run")
+        logging.debug("TimedQueue\t" + str(os.getpid()) + " run")
         while not self.exit_flag.wait(timeout=THRESHOLD):
             self.make_batch()
-        logging.debug("TimedQueue", os.getpid(), "terminated")
+        logging.debug("TimedQueue\t" + str(os.getpid()) + "terminated")
 
     def accept(self, media: bytes, decoder: Decoder) -> str:
         td: ToDecode = Audio.prepare(media, decoder.bit_rate)

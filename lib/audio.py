@@ -1,6 +1,8 @@
 import codecs
 import logging
 import os
+from os import mkdir
+from os.path import exists
 import subprocess
 from typing import Optional
 
@@ -19,10 +21,13 @@ class Audio:
         corpus_id = codecs.encode(os.urandom(CORPUS_HASH_LEN), 'hex').decode()
         wav_in = os.path.join(Audio.get_prefix(), corpus_id + ".pre.wav")
         wav_out = os.path.join(Audio.get_prefix(), corpus_id + ".wav")
-        while os.path.exists(wav_out) or os.path.exists(wav_in):
-            corpus_id = codecs.encode(os.urandom(CORPUS_HASH_LEN), 'hex').decode()
-            wav_in = os.path.join(Audio.get_prefix(), corpus_id + ".pre.wav")
-            wav_out = os.path.join(Audio.get_prefix(), corpus_id + ".wav")
+        # while os.path.exists(wav_out) or os.path.exists(wav_in):
+        #     corpus_id = codecs.encode(os.urandom(CORPUS_HASH_LEN), 'hex').decode()
+        #     wav_in = os.path.join(Audio.get_prefix(), corpus_id + ".pre.wav")
+        #     wav_out = os.path.join(Audio.get_prefix(), corpus_id + ".wav")
+
+        if not exists(Audio.get_prefix()):
+            mkdir(Audio.get_prefix())
 
         in_wav = open(wav_in, "wb")
         in_wav.write(media)
