@@ -146,7 +146,7 @@ class Decoder:
             alignment, duration = Decoder.calculate_alignment(
                 transcript_repo[key], transcript_int_repo[key], convo_repo[key])
 
-            logging.debug("Alignment complete for ", key)
+            logging.debug("Alignment complete for ", str(key))
             sentences = []
 
             # noinspection PyBroadException
@@ -179,7 +179,10 @@ class Decoder:
 
                 aligned_sentence = list()
                 for widx, word in enumerate(sentence):
-                    word_obj = Word(word, alignment[w_dim])
+                    if w_dim in alignment:
+                        word_obj = Word(word, alignment[w_dim])
+                    else:
+                        word_obj = Word(word, -1)
                     if widx == len(sentence) - 1:
                         word_obj.add_tag("is_punctuated", True)
                     aligned_sentence.append(word_obj)
@@ -190,8 +193,7 @@ class Decoder:
 
                 for idx, _ in enumerate(aligned_sentences):
                     if idx < (len(aligned_sentences) - 1):
-                        aligned_sentences[idx].length = aligned_sentences[idx +
-                                                                          1].words[0].timestamp
+                        aligned_sentences[idx].length = aligned_sentences[idx + 1].words[0].timestamp
                 aligned_sentences[(len(aligned_sentences) - 1)].length = duration
 
             transcript_out = {"duration": duration, "length": len(alignment), "sentences": aligned_sentences,
